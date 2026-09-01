@@ -20,7 +20,7 @@
         <form id="loginForm" class="login-form" novalidate>
           <label for="loginRut">
             <span>RUT / RUN del paciente</span>
-            <input type="text" id="loginRut" name="loginRut" inputmode="text" autocomplete="username" placeholder="12.345.678-9" maxlength="12" required autofocus />
+            <input type="text" id="loginRut" name="loginRut" inputmode="numeric" autocomplete="username" placeholder="12.345.678-9" maxlength="12" required autofocus />
           </label>
           <p id="loginError" class="form-error" role="alert" hidden></p>
           <button class="primary-button login-button" type="submit">Ingresar a mi ficha</button>
@@ -89,6 +89,10 @@
               <div class="grid two-columns">
                 <label><span>Previsión / sistema de salud</span><select id="insurance" name="insurance"><option value="">Seleccione...</option><option>Fonasa</option><option>Isapre</option><option>Particular</option><option>Otro</option></select></label>
                 <label><span>Grupo sanguíneo y RH</span><select id="bloodType" name="bloodType"><option value="">No informado</option><option>A+</option><option>A-</option><option>B+</option><option>B-</option><option>AB+</option><option>AB-</option><option>O+</option><option>O-</option></select></label>
+                <label class="full-span"><span>Peso (kg)</span><input type="number" id="weight" name="weight" min="1" max="500" step="0.1" inputmode="decimal" placeholder="Ej. 70.5" /></label>
+                <label><span>Altura (cm)</span><input type="number" id="height" name="height" min="30" max="250" step="0.1" inputmode="decimal" placeholder="Ej. 175" /></label>
+                <label><span>IMC</span><input type="text" id="bmi" name="bmi" readonly aria-readonly="true" placeholder="Se calcula automáticamente" /></label>
+                <p id="bmiStatus" class="bmi-status full-span" aria-live="polite"></p>
                 <label class="full-span"><span>Alergias conocidas</span><input type="text" id="allergies" name="allergies" placeholder="Medicamentos, alimentos u otras. Indique 'Ninguna' si corresponde." /></label>
                 <label class="full-span"><span>Antecedentes médicos / enfermedades crónicas</span><textarea id="medicalHistory" name="medicalHistory" rows="4" placeholder="Diagnósticos, cirugías, condiciones relevantes..." ></textarea></label>
                 <label class="full-span"><span>Medicamentos de uso habitual</span><textarea id="medications" name="medications" rows="3" placeholder="Medicamentos y dosis, si corresponde"></textarea></label>
