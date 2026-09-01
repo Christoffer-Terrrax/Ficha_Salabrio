@@ -136,10 +136,11 @@ const server = http.createServer(async (req, res) => {
     return send(res, 405, { error: 'Método no permitido.' }, { Allow: 'GET, PUT' });
   }
 
-  // Static frontend
-  let filePath = url.pathname === '/' ? path.join(ROOT, 'index.html') : path.join(ROOT, url.pathname);
-  filePath = path.normalize(filePath);
-  if (!filePath.startsWith(ROOT)) return send(res, 403, { error: 'Forbidden' });
+  // Servir únicamente archivos que estén dentro del proyecto.
+  const requestedPath = url.pathname === '/' ? '/index.html' : url.pathname;
+  const filePath = path.resolve(ROOT, `.${requestedPath}`);
+  const relativePath = path.relative(ROOT, filePath);
+  if (relativePath.startsWith('..') || path.isAbsolute(relativePath)) return send(res, 403, { error: 'Forbidden' });
 
   fs.readFile(filePath, (error, data) => {
     if (error) {
