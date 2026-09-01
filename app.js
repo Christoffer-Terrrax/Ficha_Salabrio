@@ -6,7 +6,18 @@ const appView = document.getElementById('appView');
 const loginForm = document.getElementById('loginForm');
 const loginRut = document.getElementById('loginRut');
 const loginError = document.getElementById('loginError');
-const medicalForm = document.getElementById('medicalForm');
+
+// El HTML actual no necesita un <form> envolviendo toda la ficha.
+// Este adaptador permite reutilizar querySelectorAll/reset sin romper la interfaz.
+const medicalForm = {
+  querySelectorAll: (selector) => document.querySelectorAll(`#printableFicha ${selector}`),
+  reset: () => {
+    document.querySelectorAll('#printableFicha input[name], #printableFicha textarea[name], #printableFicha select[name]').forEach((field) => {
+      if (field.name !== 'document' && field.name !== 'attachment' && field.name !== 'bmi') field.value = '';
+    });
+  }
+};
+
 const sessionRut = document.getElementById('sessionRut');
 const documentRut = document.getElementById('documentRut');
 const documentField = document.getElementById('document');
@@ -21,16 +32,21 @@ const heightField = document.getElementById('height');
 const bmiField = document.getElementById('bmi');
 const bmiStatus = document.getElementById('bmiStatus');
 
+// Acepta RUT escrito de cualquier forma: 123456785, 12.345.678-5, 12 345 678-5, etc.
+// Mientras el usuario escribe, la interfaz lo presenta automáticamente como 12.345.678-5.
+const cleanRut = (value) => String(value || '').toUpperCase().replace(/[^0-9K]/g, '').slice(0, 9);
+
 const normalizeRut = (value) => {
-  const clean = String(value || '').toUpperCase().replace(/[^0-9K]/g, '');
+  const clean = cleanRut(value);
   if (clean.length < 2) return '';
   return `${clean.slice(0, -1)}-${clean.slice(-1)}`;
 };
 
 const formatRut = (value) => {
-  const clean = String(value || '').toUpperCase().replace(/[^0-9K]/g, '').slice(0, 9);
+  const clean = cleanRut(value);
   if (!clean) return '';
   if (clean.length === 1) return clean;
+
   const body = clean.slice(0, -1);
   const verifier = clean.slice(-1);
   const formattedBody = body.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
@@ -38,21 +54,27 @@ const formatRut = (value) => {
 };
 
 const isValidRut = (value) => {
-  const clean = String(value || '').toUpperCase().replace(/[^0-9K]/g, '');
+  const clean = cleanRut(value);
   if (!/^\d{7,8}[0-9K]$/.test(clean)) return false;
+
   const body = clean.slice(0, -1);
   const checkDigit = clean.slice(-1);
   let multiplier = 2;
   let sum = 0;
+
   for (let i = body.length - 1; i >= 0; i -= 1) {
     sum += Number(body[i]) * multiplier;
     multiplier = multiplier === 7 ? 2 : multiplier + 1;
   }
+
   const remainder = 11 - (sum % 11);
   const expected = remainder === 11 ? '0' : remainder === 10 ? 'K' : String(remainder);
   return expected === checkDigit;
 };
 
+// IMC = peso (kg) / altura (m)^2.
+// Se muestra únicamente el valor calculado; en menores de edad la interpretación
+// clínica debe hacerse mediante percentiles según edad y sexo, no con categorías adultas.
 const calculateBmi = () => {
   const weight = Number.parseFloat(weightField.value);
   const heightCm = Number.parseFloat(heightField.value);
@@ -128,13 +150,16 @@ const clearForm = (rut) => {
 const loadRecord = async (rut) => {
   clearStatus();
   clearForm(rut);
+
   try {
     const response = await fetch(`${API_BASE}/patients/${encodeURIComponent(rut)}`);
     if (response.status === 404) return;
     if (!response.ok) throw new Error('No se pudo consultar la ficha.');
+
     const data = await response.json();
     setFieldValues(data.record || {});
     documentField.value = rut;
+
     if (data.attachment?.name) {
       attachmentInfo.textContent = `Documento guardado: ${data.attachment.name}`;
       attachmentPrintSection.hidden = false;
@@ -148,9 +173,9 @@ const loadRecord = async (rut) => {
 
 const enterApp = async (rut) => {
   sessionStorage.setItem(SESSION_KEY, rut);
-  sessionRut.textContent = rut;
-  documentRut.textContent = rut;
-  documentField.value = rut;
+  sessionRut.textContent = formatRut(rut);
+  documentRut.textContent = formatRut(rut);
+  documentField.value = formatRut(rut);
   loginView.hidden = true;
   appView.hidden = false;
   await loadRecord(rut);
@@ -173,16 +198,20 @@ loginRut.addEventListener('input', () => {
 
 loginForm.addEventListener('submit', async (event) => {
   event.preventDefault();
+
   const rut = normalizeRut(loginRut.value);
   if (!isValidRut(rut)) {
     setLoginError('Ingresa un RUT chileno válido para acceder a la ficha.');
     return;
   }
+
   await enterApp(rut);
 });
 
+// Peso y altura actualizan el IMC instantáneamente, sin necesidad de pulsar ningún botón.
 [weightField, heightField].forEach((field) => {
   field.addEventListener('input', calculateBmi);
+  field.addEventListener('change', calculateBmi);
 });
 
 attachment.addEventListener('change', () => {
@@ -191,17 +220,20 @@ attachment.addEventListener('change', () => {
     attachmentInfo.textContent = 'No hay documento seleccionado.';
     return;
   }
+
   const allowed = ['application/pdf', 'image/jpeg', 'image/png', 'image/webp'];
   if (!allowed.includes(file.type)) {
     attachment.value = '';
     attachmentInfo.textContent = 'Formato no permitido. Usa PDF, JPG, PNG o WEBP.';
     return;
   }
+
   if (file.size > 5 * 1024 * 1024) {
     attachment.value = '';
     attachmentInfo.textContent = 'El archivo supera el máximo de 5 MB.';
     return;
   }
+
   attachmentInfo.textContent = `${file.name} · ${(file.size / 1024 / 1024).toFixed(2)} MB`;
   attachmentPrintSection.hidden = false;
   attachmentPrintName.textContent = file.name;
@@ -228,11 +260,13 @@ document.getElementById('saveButton').addEventListener('click', async () => {
 
   const file = attachment.files[0];
   const payload = { record: data };
+
   if (file) {
     if (file.size > 5 * 1024 * 1024) {
       setStatus('El documento supera el máximo permitido de 5 MB.', 'error');
       return;
     }
+
     payload.attachment = {
       name: file.name,
       type: file.type,
@@ -251,6 +285,7 @@ document.getElementById('saveButton').addEventListener('click', async () => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
     });
+
     const result = await response.json().catch(() => ({}));
     if (!response.ok) throw new Error(result.error || 'No se pudo guardar la ficha.');
     setStatus('Ficha guardada correctamente en el servidor.');
@@ -285,6 +320,7 @@ document.getElementById('pdfButton').addEventListener('click', async () => {
 
   setStatus('Generando PDF...', 'info');
   document.body.classList.add('pdf-exporting');
+
   try {
     await html2pdf().set({
       margin: 8,
@@ -294,6 +330,7 @@ document.getElementById('pdfButton').addEventListener('click', async () => {
       jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
       pagebreak: { mode: ['css', 'legacy'] }
     }).from(element).save();
+
     setStatus('PDF generado correctamente.');
   } catch (error) {
     console.error(error);
