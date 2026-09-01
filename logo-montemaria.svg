@@ -1,11 +1,20 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 180" role="img" aria-labelledby="title desc">
-  <title id="title">Liceo Tecnológico Montemaría</title>
-  <desc id="desc">Identidad gráfica para FichaSalibrio del Liceo Tecnológico Montemaría</desc>
-  <rect width="520" height="180" rx="28" fill="#ffffff"/>
-  <circle cx="88" cy="90" r="62" fill="#103050"/>
-  <path d="M52 112c12-43 25-63 40-63 15 0 27 20 40 63" fill="none" stroke="#fff" stroke-width="8" stroke-linecap="round"/>
-  <path d="M48 118c18 15 39 18 61 7 10-5 19-13 27-24" fill="none" stroke="#d04010" stroke-width="6" stroke-linecap="round"/>
-  <text x="165" y="72" font-family="Arial, sans-serif" font-size="25" font-weight="700" letter-spacing="3" fill="#103050">LICEO TECNOLÓGICO</text>
-  <text x="165" y="116" font-family="Georgia, serif" font-size="42" font-weight="700" letter-spacing="2" fill="#103050">MONTEMARÍA</text>
-  <text x="167" y="145" font-family="Arial, sans-serif" font-size="13" font-weight="600" letter-spacing="3" fill="#d04010">PUCÓN · LA ARAUCANÍA</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 447 447" role="img" aria-labelledby="title desc">
+  <title id="title">Logo Liceo Tecnológico Montemaría</title>
+  <desc id="desc">Logo institucional del Liceo Tecnológico Montemaría.</desc>
+  <circle cx="223.5" cy="223.5" r="220" fill="#f8f8f8"/>
+  <g fill="#12375b" font-family="Georgia, 'Times New Roman', serif" text-anchor="middle">
+    <text x="223.5" y="72" font-size="24" letter-spacing="7">LICEO TECNOLÓGICO</text>
+  </g>
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M31 241 C31 196 50 155 91 142 L126 139 L169 180 L193 169 L205 183 L230 330" stroke="#12375b" stroke-width="12"/>
+    <path d="M34 252 C51 236 73 225 97 225 C84 242 83 264 94 279 C106 295 127 306 151 307" stroke="#f04b22" stroke-width="4"/>
+    <path d="M100 250 C111 267 125 275 141 277" stroke="#f04b22" stroke-width="4"/>
+    <path d="M141 277 C134 267 135 255 142 245 C150 234 157 223 157 211 C157 201 151 194 144 189" stroke="#f04b22" stroke-width="4"/>
+    <path d="M104 365 A143 143 0 0 0 394 282" stroke="#12375b" stroke-width="8"/>
+    <path d="M104 374 A152 152 0 0 0 402 284" stroke="#f04b22" stroke-width="5"/>
+  </g>
+  <g font-family="Georgia, 'Times New Roman', serif" text-anchor="start">
+    <text x="205" y="213" font-size="55" letter-spacing="2" fill="#12375b">MONTE</text>
+    <text x="258" y="274" font-size="55" letter-spacing="3" fill="#f04b22">MARÍA</text>
+  </g>
 </svg>
