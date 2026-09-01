@@ -3,100 +3,147 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Ficha Salabrio</title>
+    <meta name="theme-color" content="#103050" />
+    <title>Ficha Salabrio | Acceso</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <div class="page-shell">
-      <header class="topbar">
-        <div>
-          <p class="eyebrow">Sistema clínico</p>
-          <h1>Ficha Salabrio</h1>
-        </div>
-        <button id="resetButton" class="ghost-button" type="button">Limpiar ficha</button>
-      </header>
+    <div id="loginView" class="login-view">
+      <main class="login-card" aria-labelledby="loginTitle">
+        <div class="brand-mark" aria-hidden="true">FS</div>
+        <p class="eyebrow">Liceo Tecnológico Montemaría</p>
+        <h1 id="loginTitle">Ficha Salabrio</h1>
+        <p class="login-description">Accede a tu ficha médica utilizando tu RUT.</p>
 
-      <main class="layout">
-        <section class="panel form-panel">
-          <h2>Datos del paciente</h2>
+        <form id="loginForm" class="login-form" novalidate>
+          <label for="loginRut">
+            <span>RUT</span>
+            <input
+              type="text"
+              id="loginRut"
+              name="loginRut"
+              inputmode="text"
+              autocomplete="username"
+              placeholder="12.345.678-9"
+              maxlength="12"
+              required
+              autofocus
+            />
+          </label>
+          <p id="loginError" class="form-error" role="alert" hidden></p>
+          <button class="primary-button login-button" type="submit">Ingresar a mi ficha</button>
+        </form>
 
-          <form id="medicalForm">
-            <div class="grid two-columns">
-              <label>
-                <span>Nombre completo</span>
-                <input type="text" id="fullName" name="fullName" placeholder="Ej. María López" required />
-              </label>
-
-              <label>
-                <span>Edad</span>
-                <input type="number" id="age" name="age" min="0" max="120" required />
-              </label>
-            </div>
-
-            <div class="grid two-columns">
-              <label>
-                <span>Documento</span>
-                <input type="text" id="document" name="document" placeholder="Ej. 12345678" required />
-              </label>
-
-              <label>
-                <span>Fecha de atención</span>
-                <input type="date" id="date" name="date" required />
-              </label>
-            </div>
-
-            <div class="grid two-columns">
-              <label>
-                <span>Motivo de consulta</span>
-                <input type="text" id="reason" name="reason" placeholder="Ej. Dolor abdominal" required />
-              </label>
-
-              <label>
-                <span>Diagnóstico</span>
-                <input type="text" id="diagnosis" name="diagnosis" placeholder="Ej. Bronquitis" required />
-              </label>
-            </div>
-
-            <label>
-              <span>Síntomas</span>
-              <textarea id="symptoms" name="symptoms" rows="3" placeholder="Describa los síntomas principales" required></textarea>
-            </label>
-
-            <label>
-              <span>Tratamiento indicado</span>
-              <textarea id="treatment" name="treatment" rows="3" placeholder="Medicamentos, indicaciones, seguimiento" required></textarea>
-            </label>
-
-            <div class="grid two-columns">
-              <label>
-                <span>Antecedentes</span>
-                <input type="text" id="history" name="history" placeholder="Ej. Hipertensión" />
-              </label>
-
-              <label>
-                <span>Alergias</span>
-                <input type="text" id="allergies" name="allergies" placeholder="Ej. Penicilina" />
-              </label>
-            </div>
-
-            <label>
-              <span>Observaciones</span>
-              <textarea id="notes" name="notes" rows="4" placeholder="Observaciones adicionales"></textarea>
-            </label>
-
-            <div class="button-row">
-              <button class="primary-button" type="submit">Guardar ficha</button>
-            </div>
-          </form>
-        </section>
-
-        <aside class="panel summary-panel">
-          <h2>Resumen</h2>
-          <div id="summaryCard" class="summary-card">
-            <p class="muted">Aún no se ha guardado ninguna ficha.</p>
-          </div>
-        </aside>
+        <p class="privacy-note">El RUT se utiliza como identificador de acceso. No compartas tus datos personales.</p>
       </main>
+    </div>
+
+    <div id="appView" class="app-view" hidden>
+      <div class="page-shell">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">Sistema clínico</p>
+            <h1>Ficha Salabrio</h1>
+            <p class="session-label">Sesión para RUT <strong id="sessionRut"></strong></p>
+          </div>
+          <button id="logoutButton" class="ghost-button" type="button">Cerrar sesión</button>
+        </header>
+
+        <main class="layout">
+          <section class="panel form-panel">
+            <div class="section-heading">
+              <div>
+                <p class="section-kicker">Información personal</p>
+                <h2>Datos del paciente</h2>
+              </div>
+              <span class="secure-badge">Acceso personal</span>
+            </div>
+
+            <form id="medicalForm">
+              <div class="grid two-columns">
+                <label>
+                  <span>Nombre completo</span>
+                  <input type="text" id="fullName" name="fullName" placeholder="Ej. María López" autocomplete="name" required />
+                </label>
+
+                <label>
+                  <span>Edad</span>
+                  <input type="number" id="age" name="age" min="0" max="120" inputmode="numeric" required />
+                </label>
+              </div>
+
+              <div class="grid two-columns">
+                <label>
+                  <span>RUT</span>
+                  <input type="text" id="document" name="document" readonly aria-readonly="true" />
+                </label>
+
+                <label>
+                  <span>Fecha de atención</span>
+                  <input type="date" id="date" name="date" required />
+                </label>
+              </div>
+
+              <div class="grid two-columns">
+                <label>
+                  <span>Motivo de consulta</span>
+                  <input type="text" id="reason" name="reason" placeholder="Ej. Dolor abdominal" required />
+                </label>
+
+                <label>
+                  <span>Diagnóstico</span>
+                  <input type="text" id="diagnosis" name="diagnosis" placeholder="Ej. Bronquitis" required />
+                </label>
+              </div>
+
+              <label>
+                <span>Síntomas</span>
+                <textarea id="symptoms" name="symptoms" rows="3" placeholder="Describa los síntomas principales" required></textarea>
+              </label>
+
+              <label>
+                <span>Tratamiento indicado</span>
+                <textarea id="treatment" name="treatment" rows="3" placeholder="Medicamentos, indicaciones, seguimiento" required></textarea>
+              </label>
+
+              <div class="grid two-columns">
+                <label>
+                  <span>Antecedentes</span>
+                  <input type="text" id="history" name="history" placeholder="Ej. Hipertensión" />
+                </label>
+
+                <label>
+                  <span>Alergias</span>
+                  <input type="text" id="allergies" name="allergies" placeholder="Ej. Penicilina" />
+                </label>
+              </div>
+
+              <label>
+                <span>Observaciones</span>
+                <textarea id="notes" name="notes" rows="4" placeholder="Observaciones adicionales"></textarea>
+              </label>
+
+              <div class="button-row">
+                <button class="primary-button" type="submit">Guardar ficha</button>
+                <button id="resetButton" class="danger-button" type="button">Limpiar ficha</button>
+              </div>
+              <p id="successMessage" class="success-message" role="status" hidden>Ficha guardada correctamente.</p>
+            </form>
+          </section>
+
+          <aside class="panel summary-panel">
+            <div class="section-heading">
+              <div>
+                <p class="section-kicker">Vista rápida</p>
+                <h2>Resumen</h2>
+              </div>
+            </div>
+            <div id="summaryCard" class="summary-card">
+              <p class="muted">Aún no se ha guardado ninguna ficha.</p>
+            </div>
+          </aside>
+        </main>
+      </div>
     </div>
 
     <script src="app.js"></script>
