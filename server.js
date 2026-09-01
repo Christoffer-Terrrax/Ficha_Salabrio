@@ -71,8 +71,9 @@ const sanitizeRecord = (record = {}) => {
   const fields = [
     'fullName', 'birthDate', 'age', 'document', 'gender', 'phone', 'address',
     'emergencyName', 'emergencyRelation', 'emergencyPhone', 'insurance',
-    'bloodType', 'allergies', 'medicalHistory', 'medications', 'date',
-    'professional', 'reason', 'symptoms', 'diagnosis', 'treatment', 'notes'
+    'bloodType', 'weight', 'height', 'bmi', 'allergies', 'medicalHistory',
+    'medications', 'date', 'professional', 'reason', 'symptoms', 'diagnosis',
+    'treatment', 'notes'
   ];
   return fields.reduce((out, key) => {
     const value = record[key];
@@ -115,6 +116,13 @@ const server = http.createServer(async (req, res) => {
 
         const record = sanitizeRecord(payload.record);
         record.document = rut;
+
+        const weight = Number.parseFloat(record.weight);
+        const heightCm = Number.parseFloat(record.height);
+        record.bmi = Number.isFinite(weight) && Number.isFinite(heightCm) && weight > 0 && heightCm > 0
+          ? (weight / Math.pow(heightCm / 100, 2)).toFixed(1)
+          : '';
+
         db[key] = {
           record,
           attachment: payload.attachment ? {
@@ -136,7 +144,6 @@ const server = http.createServer(async (req, res) => {
     return send(res, 405, { error: 'Método no permitido.' }, { Allow: 'GET, PUT' });
   }
 
-  // Servir únicamente archivos que estén dentro del proyecto.
   const requestedPath = url.pathname === '/' ? '/index.html' : url.pathname;
   const filePath = path.resolve(ROOT, `.${requestedPath}`);
   const relativePath = path.relative(ROOT, filePath);
