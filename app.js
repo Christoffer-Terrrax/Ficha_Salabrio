@@ -16,6 +16,10 @@ const attachmentInfo = document.getElementById('attachmentInfo');
 const attachmentPrintSection = document.getElementById('attachmentPrintSection');
 const attachmentPrintName = document.getElementById('attachmentPrintName');
 const documentDate = document.getElementById('documentDate');
+const weightField = document.getElementById('weight');
+const heightField = document.getElementById('height');
+const bmiField = document.getElementById('bmi');
+const bmiStatus = document.getElementById('bmiStatus');
 
 const normalizeRut = (value) => {
   const clean = String(value || '').toUpperCase().replace(/[^0-9K]/g, '');
@@ -23,8 +27,16 @@ const normalizeRut = (value) => {
   return `${clean.slice(0, -1)}-${clean.slice(-1)}`;
 };
 
-// Se mantiene la validación para evitar errores de escritura, pero el acceso
-// no depende de ella como requisito institucional de la rúbrica.
+const formatRut = (value) => {
+  const clean = String(value || '').toUpperCase().replace(/[^0-9K]/g, '').slice(0, 9);
+  if (!clean) return '';
+  if (clean.length === 1) return clean;
+  const body = clean.slice(0, -1);
+  const verifier = clean.slice(-1);
+  const formattedBody = body.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+  return `${formattedBody}-${verifier}`;
+};
+
 const isValidRut = (value) => {
   const clean = String(value || '').toUpperCase().replace(/[^0-9K]/g, '');
   if (!/^\d{7,8}[0-9K]$/.test(clean)) return false;
@@ -39,6 +51,34 @@ const isValidRut = (value) => {
   const remainder = 11 - (sum % 11);
   const expected = remainder === 11 ? '0' : remainder === 10 ? 'K' : String(remainder);
   return expected === checkDigit;
+};
+
+const calculateBmi = () => {
+  const weight = Number.parseFloat(weightField.value);
+  const heightCm = Number.parseFloat(heightField.value);
+
+  if (!Number.isFinite(weight) || !Number.isFinite(heightCm) || weight <= 0 || heightCm <= 0) {
+    bmiField.value = '';
+    bmiStatus.textContent = '';
+    return '';
+  }
+
+  const heightM = heightCm / 100;
+  const bmi = weight / (heightM * heightM);
+  const rounded = bmi.toFixed(1);
+  bmiField.value = rounded;
+
+  if (bmi < 18.5) {
+    bmiStatus.textContent = 'IMC calculado: por debajo de 18,5.';
+  } else if (bmi < 25) {
+    bmiStatus.textContent = 'IMC calculado: rango de referencia adulto 18,5–24,9.';
+  } else if (bmi < 30) {
+    bmiStatus.textContent = 'IMC calculado: 25,0–29,9.';
+  } else {
+    bmiStatus.textContent = 'IMC calculado: 30,0 o superior.';
+  }
+
+  return rounded;
 };
 
 const setStatus = (message, type = 'success') => {
@@ -62,9 +102,10 @@ const getSessionRut = () => sessionStorage.getItem(SESSION_KEY);
 const setFieldValues = (data = {}) => {
   const fields = medicalForm.querySelectorAll('input[name], textarea[name], select[name]');
   fields.forEach((field) => {
-    if (field.name === 'document' || field.name === 'attachment') return;
+    if (field.name === 'document' || field.name === 'attachment' || field.name === 'bmi') return;
     field.value = data[field.name] ?? '';
   });
+  calculateBmi();
 };
 
 const getFormData = () => {
@@ -72,6 +113,7 @@ const getFormData = () => {
   medicalForm.querySelectorAll('input[name], textarea[name], select[name]').forEach((field) => {
     if (field.name !== 'attachment') data[field.name] = field.value;
   });
+  data.bmi = calculateBmi();
   return data;
 };
 
@@ -90,6 +132,7 @@ const clearForm = (rut) => {
   attachmentInfo.textContent = 'No hay documento seleccionado.';
   attachmentPrintSection.hidden = true;
   attachmentPrintName.textContent = '';
+  calculateBmi();
 };
 
 const loadRecord = async (rut) => {
@@ -134,7 +177,7 @@ const logout = () => {
 };
 
 loginRut.addEventListener('input', () => {
-  loginRut.value = loginRut.value.replace(/[^0-9kK.-]/g, '').toUpperCase();
+  loginRut.value = formatRut(loginRut.value);
   setLoginError('');
 });
 
@@ -146,6 +189,10 @@ loginForm.addEventListener('submit', async (event) => {
     return;
   }
   await enterApp(rut);
+});
+
+[weightField, heightField].forEach((field) => {
+  field.addEventListener('input', calculateBmi);
 });
 
 attachment.addEventListener('change', () => {
