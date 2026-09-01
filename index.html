@@ -4,145 +4,138 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#103050" />
-    <title>Ficha Salabrio | Acceso</title>
+    <meta name="description" content="FichaSalibrio - Ficha médica digital del Liceo Tecnológico Montemaría." />
+    <title>FichaSalibrio | Liceo Tecnológico Montemaría</title>
     <link rel="stylesheet" href="styles.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" defer></script>
   </head>
   <body>
     <div id="loginView" class="login-view">
       <main class="login-card" aria-labelledby="loginTitle">
-        <div class="brand-mark" aria-hidden="true">FS</div>
-        <p class="eyebrow">Liceo Tecnológico Montemaría</p>
-        <h1 id="loginTitle">Ficha Salabrio</h1>
-        <p class="login-description">Accede a tu ficha médica utilizando tu RUT.</p>
+        <img class="institution-logo login-logo" src="logo-montemaria.svg" alt="Liceo Tecnológico Montemaría" />
+        <span class="product-chip">FICHA MÉDICA DIGITAL</span>
+        <h1 id="loginTitle">FichaSalibrio</h1>
+        <p class="login-description">Consulta y completa la ficha médica asociada a tu RUT.</p>
 
         <form id="loginForm" class="login-form" novalidate>
           <label for="loginRut">
-            <span>RUT</span>
-            <input
-              type="text"
-              id="loginRut"
-              name="loginRut"
-              inputmode="text"
-              autocomplete="username"
-              placeholder="12.345.678-9"
-              maxlength="12"
-              required
-              autofocus
-            />
+            <span>RUT / RUN del paciente</span>
+            <input type="text" id="loginRut" name="loginRut" inputmode="text" autocomplete="username" placeholder="12.345.678-9" maxlength="12" required autofocus />
           </label>
           <p id="loginError" class="form-error" role="alert" hidden></p>
           <button class="primary-button login-button" type="submit">Ingresar a mi ficha</button>
         </form>
 
-        <p class="privacy-note">El RUT se utiliza como identificador de acceso. No compartas tus datos personales.</p>
+        <div class="institution-footer">
+          <strong>Liceo Tecnológico Montemaría</strong>
+          <span>Río Trancura 115 · Pucón · La Araucanía</span>
+        </div>
       </main>
     </div>
 
     <div id="appView" class="app-view" hidden>
       <div class="page-shell">
-        <header class="topbar">
-          <div>
-            <p class="eyebrow">Sistema clínico</p>
-            <h1>Ficha Salabrio</h1>
-            <p class="session-label">Sesión para RUT <strong id="sessionRut"></strong></p>
+        <header class="topbar no-print">
+          <div class="brand-lockup">
+            <img class="institution-logo top-logo" src="logo-montemaria.svg" alt="Liceo Tecnológico Montemaría" />
+            <div>
+              <p class="eyebrow">Plataforma institucional</p>
+              <h1>FichaSalibrio</h1>
+              <p class="session-label">Paciente identificado con RUN <strong id="sessionRut"></strong></p>
+            </div>
           </div>
           <button id="logoutButton" class="ghost-button" type="button">Cerrar sesión</button>
         </header>
 
-        <main class="layout">
-          <section class="panel form-panel">
-            <div class="section-heading">
-              <div>
-                <p class="section-kicker">Información personal</p>
-                <h2>Datos del paciente</h2>
-              </div>
-              <span class="secure-badge">Acceso personal</span>
+        <main id="printableFicha" class="medical-document">
+          <header class="document-header">
+            <img class="institution-logo document-logo" src="logo-montemaria.svg" alt="Liceo Tecnológico Montemaría" />
+            <div class="document-title">
+              <p class="document-kicker">DESAFÍO TP · TELECOMUNICACIONES</p>
+              <h1>FichaSalibrio</h1>
+              <p>Ficha Médica Digital</p>
             </div>
-
-            <form id="medicalForm">
-              <div class="grid two-columns">
-                <label>
-                  <span>Nombre completo</span>
-                  <input type="text" id="fullName" name="fullName" placeholder="Ej. María López" autocomplete="name" required />
-                </label>
-
-                <label>
-                  <span>Edad</span>
-                  <input type="number" id="age" name="age" min="0" max="120" inputmode="numeric" required />
-                </label>
-              </div>
-
-              <div class="grid two-columns">
-                <label>
-                  <span>RUT</span>
-                  <input type="text" id="document" name="document" readonly aria-readonly="true" />
-                </label>
-
-                <label>
-                  <span>Fecha de atención</span>
-                  <input type="date" id="date" name="date" required />
-                </label>
-              </div>
-
-              <div class="grid two-columns">
-                <label>
-                  <span>Motivo de consulta</span>
-                  <input type="text" id="reason" name="reason" placeholder="Ej. Dolor abdominal" required />
-                </label>
-
-                <label>
-                  <span>Diagnóstico</span>
-                  <input type="text" id="diagnosis" name="diagnosis" placeholder="Ej. Bronquitis" required />
-                </label>
-              </div>
-
-              <label>
-                <span>Síntomas</span>
-                <textarea id="symptoms" name="symptoms" rows="3" placeholder="Describa los síntomas principales" required></textarea>
-              </label>
-
-              <label>
-                <span>Tratamiento indicado</span>
-                <textarea id="treatment" name="treatment" rows="3" placeholder="Medicamentos, indicaciones, seguimiento" required></textarea>
-              </label>
-
-              <div class="grid two-columns">
-                <label>
-                  <span>Antecedentes</span>
-                  <input type="text" id="history" name="history" placeholder="Ej. Hipertensión" />
-                </label>
-
-                <label>
-                  <span>Alergias</span>
-                  <input type="text" id="allergies" name="allergies" placeholder="Ej. Penicilina" />
-                </label>
-              </div>
-
-              <label>
-                <span>Observaciones</span>
-                <textarea id="notes" name="notes" rows="4" placeholder="Observaciones adicionales"></textarea>
-              </label>
-
-              <div class="button-row">
-                <button class="primary-button" type="submit">Guardar ficha</button>
-                <button id="resetButton" class="danger-button" type="button">Limpiar ficha</button>
-              </div>
-              <p id="successMessage" class="success-message" role="status" hidden>Ficha guardada correctamente.</p>
-            </form>
-          </section>
-
-          <aside class="panel summary-panel">
-            <div class="section-heading">
-              <div>
-                <p class="section-kicker">Vista rápida</p>
-                <h2>Resumen</h2>
-              </div>
+            <div class="document-meta">
+              <span>RUN</span>
+              <strong id="documentRut"></strong>
             </div>
-            <div id="summaryCard" class="summary-card">
-              <p class="muted">Aún no se ha guardado ninguna ficha.</p>
-            </div>
-          </aside>
+          </header>
+
+          <div class="document-body">
+            <section class="document-section">
+              <div class="section-title"><span>01</span><div><p>Identificación</p><h2>Datos demográficos del paciente</h2></div></div>
+              <div class="grid three-columns">
+                <label><span>Nombre completo</span><input type="text" id="fullName" name="fullName" placeholder="Nombre y apellidos" autocomplete="name" required /></label>
+                <label><span>Fecha de nacimiento</span><input type="date" id="birthDate" name="birthDate" required /></label>
+                <label><span>Edad</span><input type="number" id="age" name="age" min="0" max="120" inputmode="numeric" required /></label>
+                <label><span>RUN / RUT</span><input type="text" id="document" name="document" readonly aria-readonly="true" /></label>
+                <label><span>Género</span><select id="gender" name="gender"><option value="">Seleccione...</option><option>Femenino</option><option>Masculino</option><option>Otro</option><option>Prefiere no indicar</option></select></label>
+                <label><span>Teléfono</span><input type="tel" id="phone" name="phone" inputmode="tel" placeholder="+56 9..." /></label>
+                <label class="full-span"><span>Dirección / sector de residencia</span><input type="text" id="address" name="address" placeholder="Dirección o sector" /></label>
+              </div>
+            </section>
+
+            <section class="document-section">
+              <div class="section-title"><span>02</span><div><p>Contacto</p><h2>En caso de emergencia</h2></div></div>
+              <div class="grid three-columns">
+                <label><span>Nombre del contacto</span><input type="text" id="emergencyName" name="emergencyName" placeholder="Nombre completo" /></label>
+                <label><span>Parentesco / relación</span><input type="text" id="emergencyRelation" name="emergencyRelation" placeholder="Madre, padre, tutor, etc." /></label>
+                <label><span>Teléfono</span><input type="tel" id="emergencyPhone" name="emergencyPhone" inputmode="tel" placeholder="+56 9..." /></label>
+              </div>
+            </section>
+
+            <section class="document-section">
+              <div class="section-title"><span>03</span><div><p>Información médica</p><h2>Antecedentes y condiciones</h2></div></div>
+              <div class="grid two-columns">
+                <label><span>Previsión / sistema de salud</span><select id="insurance" name="insurance"><option value="">Seleccione...</option><option>Fonasa</option><option>Isapre</option><option>Particular</option><option>Otro</option></select></label>
+                <label><span>Grupo sanguíneo y RH</span><select id="bloodType" name="bloodType"><option value="">No informado</option><option>A+</option><option>A-</option><option>B+</option><option>B-</option><option>AB+</option><option>AB-</option><option>O+</option><option>O-</option></select></label>
+                <label class="full-span"><span>Alergias conocidas</span><input type="text" id="allergies" name="allergies" placeholder="Medicamentos, alimentos u otras. Indique 'Ninguna' si corresponde." /></label>
+                <label class="full-span"><span>Antecedentes médicos / enfermedades crónicas</span><textarea id="medicalHistory" name="medicalHistory" rows="4" placeholder="Diagnósticos, cirugías, condiciones relevantes..." ></textarea></label>
+                <label class="full-span"><span>Medicamentos de uso habitual</span><textarea id="medications" name="medications" rows="3" placeholder="Medicamentos y dosis, si corresponde"></textarea></label>
+              </div>
+            </section>
+
+            <section class="document-section">
+              <div class="section-title"><span>04</span><div><p>Atención</p><h2>Registro clínico</h2></div></div>
+              <div class="grid two-columns">
+                <label><span>Fecha de atención</span><input type="date" id="date" name="date" required /></label>
+                <label><span>Profesional / responsable</span><input type="text" id="professional" name="professional" placeholder="Nombre del profesional o responsable" /></label>
+                <label class="full-span"><span>Motivo de consulta</span><input type="text" id="reason" name="reason" placeholder="Motivo principal de atención" /></label>
+                <label class="full-span"><span>Síntomas / evaluación</span><textarea id="symptoms" name="symptoms" rows="4" placeholder="Descripción de síntomas, signos o evaluación"></textarea></label>
+                <label class="full-span"><span>Diagnóstico / impresión clínica</span><textarea id="diagnosis" name="diagnosis" rows="3" placeholder="Diagnóstico o impresión clínica"></textarea></label>
+                <label class="full-span"><span>Tratamiento / indicaciones</span><textarea id="treatment" name="treatment" rows="4" placeholder="Tratamiento, indicaciones y seguimiento"></textarea></label>
+                <label class="full-span"><span>Observaciones</span><textarea id="notes" name="notes" rows="4" placeholder="Información adicional relevante"></textarea></label>
+              </div>
+            </section>
+
+            <section class="document-section attachment-section no-print">
+              <div class="section-title"><span>05</span><div><p>Documentación</p><h2>Adjuntar documento o examen</h2></div></div>
+              <div class="upload-box">
+                <input type="file" id="attachment" name="attachment" accept="application/pdf,image/png,image/jpeg,image/webp" />
+                <p>PDF, JPG, PNG o WEBP · máximo 5 MB</p>
+                <div id="attachmentInfo" class="attachment-info">No hay documento seleccionado.</div>
+              </div>
+            </section>
+
+            <section class="attachment-print-section print-only" id="attachmentPrintSection" hidden>
+              <div class="section-title"><span>05</span><div><p>Documentación</p><h2>Documento adjunto</h2></div></div>
+              <p id="attachmentPrintName"></p>
+            </section>
+          </div>
+
+          <footer class="document-footer">
+            <span>FichaSalibrio · Liceo Tecnológico Montemaría · Pucón</span>
+            <span id="documentDate"></span>
+          </footer>
         </main>
+
+        <div class="action-bar no-print">
+          <button class="primary-button" id="saveButton" type="button">Guardar ficha</button>
+          <button class="secondary-button" id="printButton" type="button">Imprimir ficha</button>
+          <button class="accent-button" id="pdfButton" type="button">Descargar PDF</button>
+          <button class="danger-button" id="clearButton" type="button">Limpiar</button>
+        </div>
+        <p id="statusMessage" class="status-message no-print" role="status" hidden></p>
       </div>
     </div>
 
