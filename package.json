@@ -1,0 +1,12 @@
+{
+  "name": "ficha-salibrio",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Ficha médica digital del Liceo Tecnológico Montemaría",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
