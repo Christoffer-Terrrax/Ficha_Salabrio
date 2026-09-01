@@ -67,17 +67,7 @@ const calculateBmi = () => {
   const bmi = weight / (heightM * heightM);
   const rounded = bmi.toFixed(1);
   bmiField.value = rounded;
-
-  if (bmi < 18.5) {
-    bmiStatus.textContent = 'IMC calculado: por debajo de 18,5.';
-  } else if (bmi < 25) {
-    bmiStatus.textContent = 'IMC calculado: rango de referencia adulto 18,5–24,9.';
-  } else if (bmi < 30) {
-    bmiStatus.textContent = 'IMC calculado: 25,0–29,9.';
-  } else {
-    bmiStatus.textContent = 'IMC calculado: 30,0 o superior.';
-  }
-
+  bmiStatus.textContent = 'IMC calculado automáticamente a partir del peso y la altura.';
   return rounded;
 };
 
