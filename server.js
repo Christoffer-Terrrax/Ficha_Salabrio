@@ -8,6 +8,8 @@ const ROOT = __dirname;
 const DATA_DIR = process.env.DATA_DIR || path.join(ROOT, 'data');
 const DB_FILE = path.join(DATA_DIR, 'patients.json');
 const MAX_BODY = 8 * 1024 * 1024;
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || '';
+const adminSessions = new Map();
 
 const MIME = {
   '.html': 'text/html; charset=utf-8',
@@ -22,11 +24,8 @@ fs.mkdirSync(DATA_DIR, { recursive: true });
 if (!fs.existsSync(DB_FILE)) fs.writeFileSync(DB_FILE, '{}', 'utf8');
 
 const readDb = () => {
-  try {
-    return JSON.parse(fs.readFileSync(DB_FILE, 'utf8') || '{}');
-  } catch {
-    return {};
-  }
+  try { return JSON.parse(fs.readFileSync(DB_FILE, 'utf8') || '{}'); }
+  catch { return {}; }
 };
 
 const writeDb = (db) => {
@@ -39,7 +38,6 @@ const normalizeRut = (value) => {
   const clean = String(value || '').toUpperCase().replace(/[^0-9K]/g, '');
   return clean.length >= 2 ? `${clean.slice(0, -1)}-${clean.slice(-1)}` : '';
 };
-
 const rutKey = (rut) => normalizeRut(rut).replace('-', '');
 
 const send = (res, status, payload, headers = {}) => {
@@ -58,14 +56,17 @@ const readJson = (req) => new Promise((resolve, reject) => {
     }
   });
   req.on('end', () => {
-    try {
-      resolve(JSON.parse(raw || '{}'));
-    } catch {
-      reject(new Error('INVALID_JSON'));
-    }
+    try { resolve(JSON.parse(raw || '{}')); }
+    catch { reject(new Error('INVALID_JSON')); }
   });
   req.on('error', reject);
 });
+
+const parseCookies = (header = '') => Object.fromEntries(header.split(';').map((part) => part.trim().split('=').map(decodeURIComponent)).filter(([key]) => key));
+const isAdmin = (req) => {
+  const token = parseCookies(req.headers.cookie || '').admin_session;
+  return Boolean(token && adminSessions.has(token));
+};
 
 const sanitizeRecord = (record = {}) => {
   const fields = [
@@ -91,15 +92,54 @@ const validAttachment = (attachment) => {
 const server = http.createServer(async (req, res) => {
   const url = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
 
-  if (url.pathname === '/health') {
-    return send(res, 200, { status: 'ok', service: 'FichaSalibrio' });
+  if (url.pathname === '/health') return send(res, 200, { status: 'ok', service: 'FichaSalibrio' });
+
+  if (url.pathname === '/api/admin/login' && req.method === 'POST') {
+    try {
+      if (!ADMIN_PASSWORD) return send(res, 503, { error: 'El acceso administrador aún no está configurado en Railway.' });
+      const payload = await readJson(req);
+      const supplied = String(payload.password || '');
+      const a = Buffer.from(supplied);
+      const b = Buffer.from(ADMIN_PASSWORD);
+      const valid = a.length === b.length && crypto.timingSafeEqual(a, b);
+      if (!valid) return send(res, 401, { error: 'Contraseña incorrecta.' });
+
+      const token = crypto.randomBytes(32).toString('hex');
+      adminSessions.set(token, Date.now() + 8 * 60 * 60 * 1000);
+      return send(res, 200, { ok: true }, { 'Set-Cookie': `admin_session=${token}; HttpOnly; Secure; SameSite=Strict; Path=/; Max-Age=28800` });
+    } catch { return send(res, 400, { error: 'Solicitud inválida.' }); }
+  }
+
+  if (url.pathname === '/api/admin/logout' && req.method === 'POST') {
+    const token = parseCookies(req.headers.cookie || '').admin_session;
+    if (token) adminSessions.delete(token);
+    return send(res, 200, { ok: true }, { 'Set-Cookie': 'admin_session=; HttpOnly; Secure; SameSite=Strict; Path=/; Max-Age=0' });
+  }
+
+  if (url.pathname === '/api/admin/patients' && req.method === 'GET') {
+    if (!isAdmin(req)) return send(res, 401, { error: 'Acceso de administrador requerido.' });
+    const db = readDb();
+    const records = Object.values(db).map((item) => ({
+      rut: item.record?.document || '',
+      name: item.record?.fullName || '',
+      date: item.record?.date || '',
+      updatedAt: item.updatedAt || ''
+    })).sort((a, b) => String(b.updatedAt).localeCompare(String(a.updatedAt)));
+    return send(res, 200, { records });
+  }
+
+  if (url.pathname.startsWith('/api/admin/patients/') && req.method === 'GET') {
+    if (!isAdmin(req)) return send(res, 401, { error: 'Acceso de administrador requerido.' });
+    const rut = normalizeRut(decodeURIComponent(url.pathname.slice('/api/admin/patients/'.length)));
+    const item = readDb()[rutKey(rut)];
+    if (!item) return send(res, 404, { error: 'Ficha no encontrada.' });
+    return send(res, 200, { record: item.record, attachment: item.attachment ? { name: item.attachment.name, type: item.attachment.type, size: item.attachment.size } : null });
   }
 
   if (url.pathname.startsWith('/api/patients/')) {
     const rut = normalizeRut(decodeURIComponent(url.pathname.slice('/api/patients/'.length)));
     const key = rutKey(rut);
     if (!key || key.length < 8) return send(res, 400, { error: 'RUT inválido.' });
-
     const db = readDb();
 
     if (req.method === 'GET') {
@@ -113,24 +153,15 @@ const server = http.createServer(async (req, res) => {
         const payload = await readJson(req);
         if (!payload.record || typeof payload.record !== 'object') return send(res, 400, { error: 'Datos de ficha incompletos.' });
         if (payload.attachment && !validAttachment(payload.attachment)) return send(res, 400, { error: 'Documento inválido o supera 5 MB.' });
-
         const record = sanitizeRecord(payload.record);
         record.document = rut;
-
         const weight = Number.parseFloat(record.weight);
         const heightCm = Number.parseFloat(record.height);
         record.bmi = Number.isFinite(weight) && Number.isFinite(heightCm) && weight > 0 && heightCm > 0
-          ? (weight / Math.pow(heightCm / 100, 2)).toFixed(1)
-          : '';
-
+          ? (weight / Math.pow(heightCm / 100, 2)).toFixed(1) : '';
         db[key] = {
           record,
-          attachment: payload.attachment ? {
-            name: String(payload.attachment.name || 'documento').slice(0, 180),
-            type: payload.attachment.type,
-            size: Number(payload.attachment.size),
-            data: payload.attachment.data
-          } : db[key]?.attachment || null,
+          attachment: payload.attachment ? { name: String(payload.attachment.name || 'documento').slice(0, 180), type: payload.attachment.type, size: Number(payload.attachment.size), data: payload.attachment.data } : db[key]?.attachment || null,
           updatedAt: new Date().toISOString()
         };
         writeDb(db);
@@ -140,7 +171,6 @@ const server = http.createServer(async (req, res) => {
         return send(res, 400, { error: message });
       }
     }
-
     return send(res, 405, { error: 'Método no permitido.' }, { Allow: 'GET, PUT' });
   }
 
@@ -148,7 +178,6 @@ const server = http.createServer(async (req, res) => {
   const filePath = path.resolve(ROOT, `.${requestedPath}`);
   const relativePath = path.relative(ROOT, filePath);
   if (relativePath.startsWith('..') || path.isAbsolute(relativePath)) return send(res, 403, { error: 'Forbidden' });
-
   fs.readFile(filePath, (error, data) => {
     if (error) {
       res.writeHead(error.code === 'ENOENT' ? 404 : 500, { 'Content-Type': 'text/plain; charset=utf-8' });
@@ -160,6 +189,4 @@ const server = http.createServer(async (req, res) => {
   });
 });
 
-server.listen(PORT, '0.0.0.0', () => {
-  console.log(`FichaSalibrio listening on port ${PORT}`);
-});
+server.listen(PORT, '0.0.0.0', () => console.log(`FichaSalibrio listening on port ${PORT}`));
