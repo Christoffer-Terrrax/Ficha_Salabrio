@@ -45,7 +45,7 @@ const validAttachment = (attachment) => { if (!attachment) return true; const al
 
 const server = http.createServer(async (req, res) => {
   const url = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
-  if (url.pathname === '/health') return send(res, 200, { status:'ok', service:'FichaSalibrio' });
+  if (url.pathname === '/health') return send(res, 200, { status:'ok', service:'FichaSalabrio' });
 
   if (url.pathname === '/api/admin/login' && req.method === 'POST') {
     try {
@@ -109,10 +109,10 @@ const server = http.createServer(async (req, res) => {
     if (error) { res.writeHead(error.code === 'ENOENT' ? 404 : 500, { 'Content-Type':'text/plain; charset=utf-8' }); return res.end(error.code === 'ENOENT' ? 'Not found' : 'Server error'); }
     let output = data;
     if (requestedPath === '/index.html') {
-      output = Buffer.from(data.toString('utf8').replace('</form>', '</form><a href="/admin.html" style="display:block;margin-top:14px;text-align:center;color:#103050;font-size:.82rem;font-weight:700;text-decoration:none">Acceso administrador</a>'), 'utf8');
+      output = Buffer.from(data.toString('utf8').replace('</form>', '</form><a class="admin-access" href="/admin.html">Acceso de administrador</a>'), 'utf8');
     }
     const ext = path.extname(filePath).toLowerCase(); res.writeHead(200, { 'Content-Type':MIME[ext] || 'application/octet-stream', 'Cache-Control':ext === '.html' ? 'no-cache' : 'public, max-age=3600' }); res.end(output);
   });
 });
 
-server.listen(PORT, '0.0.0.0', () => console.log(`FichaSalibrio listening on port ${PORT}`));
+server.listen(PORT, '0.0.0.0', () => console.log(`FichaSalabrio listening on port ${PORT}`));
