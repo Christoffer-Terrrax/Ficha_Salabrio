@@ -1,20 +1,24 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 447 447" role="img" aria-labelledby="title desc">
-  <title id="title">Logo Liceo Tecnológico Montemaría</title>
-  <desc id="desc">Logo institucional del Liceo Tecnológico Montemaría.</desc>
-  <circle cx="223.5" cy="223.5" r="220" fill="#f8f8f8"/>
-  <g fill="#12375b" font-family="Georgia, 'Times New Roman', serif" text-anchor="middle">
-    <text x="223.5" y="72" font-size="24" letter-spacing="7">LICEO TECNOLÓGICO</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 220" role="img" aria-labelledby="title desc">
+  <title id="title">Liceo Tecnológico Montemaría</title>
+  <desc id="desc">Identidad visual de FichaSalibrio y Liceo Tecnológico Montemaría.</desc>
+  <defs>
+    <linearGradient id="shield" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#174d78"/>
+      <stop offset="1" stop-color="#0b2e4d"/>
+    </linearGradient>
+  </defs>
+  <g transform="translate(12 12)">
+    <path d="M98 0 188 31v67c0 55-37 86-90 106C45 184 8 153 8 98V31L98 0Z" fill="url(#shield)"/>
+    <path d="M98 25 165 48v49c0 39-25 62-67 80-42-18-67-41-67-80V48l67-23Z" fill="none" stroke="#fff" stroke-width="5" opacity=".9"/>
+    <path d="M53 119c16-28 31-42 45-42s29 14 45 42" fill="none" stroke="#f05a28" stroke-width="8" stroke-linecap="round"/>
+    <path d="M61 119h74" stroke="#fff" stroke-width="6" stroke-linecap="round"/>
+    <path d="M98 49v67" stroke="#fff" stroke-width="5" stroke-linecap="round" opacity=".9"/>
+    <circle cx="98" cy="49" r="8" fill="#f05a28"/>
   </g>
-  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M31 241 C31 196 50 155 91 142 L126 139 L169 180 L193 169 L205 183 L230 330" stroke="#12375b" stroke-width="12"/>
-    <path d="M34 252 C51 236 73 225 97 225 C84 242 83 264 94 279 C106 295 127 306 151 307" stroke="#f04b22" stroke-width="4"/>
-    <path d="M100 250 C111 267 125 275 141 277" stroke="#f04b22" stroke-width="4"/>
-    <path d="M141 277 C134 267 135 255 142 245 C150 234 157 223 157 211 C157 201 151 194 144 189" stroke="#f04b22" stroke-width="4"/>
-    <path d="M104 365 A143 143 0 0 0 394 282" stroke="#12375b" stroke-width="8"/>
-    <path d="M104 374 A152 152 0 0 0 402 284" stroke="#f04b22" stroke-width="5"/>
-  </g>
-  <g font-family="Georgia, 'Times New Roman', serif" text-anchor="start">
-    <text x="205" y="213" font-size="55" letter-spacing="2" fill="#12375b">MONTE</text>
-    <text x="258" y="274" font-size="55" letter-spacing="3" fill="#f04b22">MARÍA</text>
+  <g font-family="Segoe UI, Arial, Helvetica, sans-serif">
+    <text x="225" y="72" fill="#f05a28" font-size="20" font-weight="800" letter-spacing="4">LICEO TECNOLÓGICO</text>
+    <text x="225" y="125" fill="#103050" font-size="50" font-weight="800" letter-spacing="1">MONTEMARÍA</text>
+    <text x="228" y="157" fill="#66758a" font-size="16" font-weight="600" letter-spacing="3">FICHA SALABRÍO · PLATAFORMA DIGITAL</text>
+    <rect x="225" y="174" width="300" height="5" rx="2.5" fill="#f05a28"/>
   </g>
 </svg>
