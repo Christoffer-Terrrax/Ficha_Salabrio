@@ -33,11 +33,15 @@ loginForm.addEventListener('submit', async (event) => {
 
 const loadRecords = async () => {
   const response = await fetch('/api/admin/patients', { credentials:'same-origin' });
-  if (response.status === 401) { showLogin(); return; }
+  if (response.status === 401) {
+    showLogin();
+    return false;
+  }
   const result = await response.json().catch(() => ({}));
   if (!response.ok) throw new Error(result.error || 'No se pudieron cargar las fichas.');
   records = Array.isArray(result.records) ? result.records : [];
   renderRecords();
+  return true;
 };
 
 const renderRecords = () => {
@@ -70,4 +74,6 @@ search.addEventListener('input', renderRecords);
 document.getElementById('refreshRecords').addEventListener('click', () => loadRecords().catch((error) => alert(error.message)));
 document.getElementById('logoutAdmin').addEventListener('click', async () => { await fetch('/api/admin/logout', { method:'POST', credentials:'same-origin' }); showLogin(); });
 
-loadRecords().then(showDashboard).catch(() => showLogin());
+loadRecords().then((authenticated) => {
+  if (authenticated) showDashboard();
+}).catch(() => showLogin());
