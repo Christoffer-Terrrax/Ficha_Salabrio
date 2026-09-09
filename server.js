@@ -49,7 +49,7 @@ const server = http.createServer(async (req, res) => {
 
   if (url.pathname === '/api/admin/login' && req.method === 'POST') {
     try {
-      if (!ADMIN_PASSWORD) return send(res, 503, { error:'El acceso administrador aún no está configurado en Railway.' });
+      if (!ADMIN_PASSWORD) return send(res, 503, { error:'El acceso administrador aún no está configurado.' });
       const payload = await readJson(req); const supplied = String(payload.password || '');
       const a = Buffer.from(supplied); const b = Buffer.from(ADMIN_PASSWORD);
       const valid = a.length === b.length && crypto.timingSafeEqual(a, b);
@@ -71,10 +71,18 @@ const server = http.createServer(async (req, res) => {
     return send(res, 200, { records });
   }
 
-  if (url.pathname.startsWith('/api/admin/patients/') && req.method === 'GET') {
+  if (url.pathname.startsWith('/api/admin/patients/') && (req.method === 'GET' || req.method === 'DELETE')) {
     if (!isAdmin(req)) return send(res, 401, { error:'Acceso de administrador requerido.' });
-    const rut = normalizeRut(decodeURIComponent(url.pathname.slice('/api/admin/patients/'.length))); const item = readDb()[rutKey(rut)];
-    if (!item) return send(res, 404, { error:'Ficha no encontrada.' });
+    const rut = normalizeRut(decodeURIComponent(url.pathname.slice('/api/admin/patients/'.length))); const key = rutKey(rut);
+    if (!key || key.length < 8) return send(res, 400, { error:'RUT inválido.' });
+    const db = readDb();
+    if (!db[key]) return send(res, 404, { error:'Ficha no encontrada.' });
+    if (req.method === 'DELETE') {
+      delete db[key];
+      writeDb(db);
+      return send(res, 200, { ok:true, message:'Ficha eliminada correctamente.' });
+    }
+    const item = db[key];
     return send(res, 200, { record:item.record, attachment:item.attachment ? { name:item.attachment.name, type:item.attachment.type, size:item.attachment.size } : null });
   }
 
@@ -108,9 +116,7 @@ const server = http.createServer(async (req, res) => {
   fs.readFile(filePath, (error, data) => {
     if (error) { res.writeHead(error.code === 'ENOENT' ? 404 : 500, { 'Content-Type':'text/plain; charset=utf-8' }); return res.end(error.code === 'ENOENT' ? 'Not found' : 'Server error'); }
     let output = data;
-    if (requestedPath === '/index.html') {
-      output = Buffer.from(data.toString('utf8').replace('</form>', '</form><a class="admin-access" href="/admin.html">Acceso de administrador</a>'), 'utf8');
-    }
+    if (requestedPath === '/index.html') output = Buffer.from(data.toString('utf8').replace('</form>', '</form><a class="admin-access" href="/admin.html">Acceso de administrador</a>'), 'utf8');
     const ext = path.extname(filePath).toLowerCase(); res.writeHead(200, { 'Content-Type':MIME[ext] || 'application/octet-stream', 'Cache-Control':ext === '.html' ? 'no-cache' : 'public, max-age=3600' }); res.end(output);
   });
 });
