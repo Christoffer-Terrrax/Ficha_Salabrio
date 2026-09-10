@@ -6,65 +6,18 @@
   <meta name="theme-color" content="#103050" />
   <title>Administración | FichaSalibrio</title>
   <link rel="stylesheet" href="styles.css" />
-  <style>
-    .admin-page { width:min(1200px,100%); margin:0 auto; padding:24px 20px 50px; }
-    .admin-header { display:flex; justify-content:space-between; align-items:center; gap:16px; margin-bottom:20px; }
-    .admin-brand { display:flex; align-items:center; gap:15px; }
-    .admin-logo { width:220px; height:65px; }
-    .admin-card { background:#fff; border:1px solid var(--line); border-radius:18px; box-shadow:var(--shadow); padding:24px; }
-    .admin-login { width:min(100%,460px); margin:8vh auto; text-align:center; }
-    .admin-login h1 { color:var(--navy); margin:10px 0 8px; }
-    .admin-login p { color:var(--muted); line-height:1.5; }
-    .admin-form { text-align:left; margin-top:22px; }
-    .admin-form label { display:block; margin-bottom:14px; font-weight:650; }
-    .admin-form label span { display:block; margin-bottom:7px; font-size:.82rem; }
-    .admin-form input { font-size:16px; }
-    .admin-error { color:var(--danger); font-size:.88rem; font-weight:650; min-height:20px; }
-    .toolbar { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:12px; }
-    .toolbar input { flex:1 1 280px; min-width:0; }
-    .admin-help { margin:0 0 18px; color:var(--muted); font-size:.86rem; line-height:1.5; }
-    .stats { display:flex; gap:12px; flex-wrap:wrap; margin-bottom:18px; }
-    .stat { padding:12px 16px; background:var(--soft); border:1px solid var(--line); border-radius:10px; min-width:145px; }
-    .stat strong { display:block; color:var(--navy); font-size:1.25rem; }
-    .stat span { color:var(--muted); font-size:.75rem; }
-    .table-wrap { overflow-x:auto; border:1px solid var(--line); border-radius:12px; }
-    table { width:100%; border-collapse:collapse; min-width:780px; }
-    th,td { padding:12px 14px; border-bottom:1px solid var(--line); text-align:left; font-size:.84rem; vertical-align:top; }
-    th { background:#f3f7fb; color:var(--navy); font-size:.74rem; text-transform:uppercase; letter-spacing:.04em; }
-    tr:last-child td { border-bottom:0; }
-    .actions { display:flex; gap:7px; flex-wrap:wrap; }
-    .table-button { border:0; border-radius:8px; padding:8px 11px; background:var(--navy); color:#fff; font-weight:700; cursor:pointer; }
-    .delete-button { border:0; border-radius:8px; padding:8px 11px; background:#b42318; color:#fff; font-weight:700; cursor:pointer; }
-    .table-button:hover,.delete-button:hover { filter:brightness(.94); }
-    button:disabled { opacity:.55; cursor:not-allowed; }
-    .empty { padding:30px; text-align:center; color:var(--muted); }
-    .modal { position:fixed; inset:0; z-index:20; display:grid; place-items:center; padding:18px; background:rgba(8,36,61,.55); }
-    .modal-card { width:min(900px,100%); max-height:90vh; overflow:auto; background:#fff; border-radius:16px; padding:24px; box-shadow:0 25px 80px rgba(0,0,0,.25); }
-    .confirm-card { width:min(500px,100%); }
-    .modal-head { display:flex; justify-content:space-between; gap:15px; align-items:flex-start; margin-bottom:18px; }
-    .modal-head h2 { margin:0; color:var(--navy); }
-    .detail-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
-    .detail { padding:12px; background:var(--soft); border-radius:9px; }
-    .detail small { display:block; color:var(--muted); margin-bottom:4px; }
-    .detail strong { overflow-wrap:anywhere; }
-    .modal-close { border:0; background:#edf3fa; color:var(--navy); border-radius:8px; padding:8px 12px; cursor:pointer; font-weight:700; }
-    .warning { background:#fff4f2; border:1px solid #f1b8b2; color:#7a271a; border-radius:10px; padding:12px 14px; line-height:1.5; margin:0 0 16px; }
-    .confirm-rut { font-weight:800; color:var(--navy); }
-    .confirm-actions { display:flex; justify-content:flex-end; gap:10px; margin-top:18px; }
-    .cancel-button { border:1px solid var(--line); border-radius:8px; padding:9px 13px; background:#fff; color:var(--navy); font-weight:700; cursor:pointer; }
-    .delete-confirm { border:0; border-radius:8px; padding:9px 13px; background:#b42318; color:#fff; font-weight:700; cursor:pointer; }
-    @media(max-width:680px){ .admin-page{padding:14px 10px 30px}.admin-header{align-items:flex-start;flex-direction:column}.admin-logo{width:min(100%,300px)}.admin-header .ghost-button{width:100%}.admin-card{padding:17px}.detail-grid{grid-template-columns:1fr}.confirm-actions{flex-direction:column}.cancel-button,.delete-confirm{width:100%} }
-  </style>
+  <script src="theme.js" defer></script>
 </head>
 <body>
   <main id="loginPanel" class="admin-page">
     <section class="admin-card admin-login">
-      <img class="institution-logo admin-logo" src="logo-montemaria.svg" alt="Liceo Tecnológico Montemaría" />
+      <div class="login-top-actions"><button id="themeToggleAdmin" class="theme-toggle" type="button" aria-label="Cambiar tema">☾ Oscuro</button></div>
+      <img class="institution-logo admin-logo" src="logo-montemaria.png" alt="Liceo Tecnológico Montemaría" />
       <span class="product-chip">ACCESO RESTRINGIDO</span>
       <h1>Panel de administrador</h1>
-      <p>Ingresa la contraseña administrativa para consultar y administrar el registro de fichas guardadas.</p>
+      <p>Ingresa a la administración para consultar, revisar o eliminar fichas guardadas.</p>
       <form id="adminLoginForm" class="admin-form">
-        <label><span>Contraseña de administrador</span><input id="adminPassword" type="password" autocomplete="current-password" required autofocus /></label>
+        <label><span>Contraseña de administrador</span><input id="adminPassword" type="password" autocomplete="current-password" value="admin1234" required /></label>
         <p id="adminError" class="admin-error" role="alert"></p>
         <button class="primary-button login-button" type="submit">Ingresar como administrador</button>
       </form>
@@ -74,38 +27,19 @@
 
   <main id="dashboard" class="admin-page" hidden>
     <header class="admin-header">
-      <div class="admin-brand">
-        <img class="institution-logo admin-logo" src="logo-montemaria.svg" alt="Liceo Tecnológico Montemaría" />
-        <div><p class="eyebrow">Acceso administrativo</p><h1 style="margin:0;color:var(--navy)">Registro de fichas</h1></div>
-      </div>
-      <button id="logoutAdmin" class="ghost-button" type="button">Cerrar sesión</button>
+      <div class="admin-brand"><img class="institution-logo admin-logo" src="logo-montemaria.png" alt="Liceo Tecnológico Montemaría" /><div><p class="eyebrow">Acceso administrativo</p><h1 style="margin:0;color:var(--navy)">Registro de fichas</h1></div></div>
+      <div style="display:flex;gap:10px;align-items:center"><button class="theme-toggle" type="button">☾ Oscuro</button><button id="logoutAdmin" class="ghost-button" type="button">Cerrar sesión</button></div>
     </header>
     <section class="admin-card">
-      <div class="stats">
-        <div class="stat"><strong id="recordCount">0</strong><span>Fichas registradas</span></div>
-        <div class="stat"><strong id="visibleCount">0</strong><span>Fichas mostradas</span></div>
-      </div>
+      <div class="stats"><div class="stat"><strong id="recordCount">0</strong><span>Fichas registradas</span></div><div class="stat"><strong id="visibleCount">0</strong><span>Fichas mostradas</span></div></div>
       <p class="admin-help"><strong>¿Qué puedes hacer aquí?</strong> Busca una ficha por RUT o nombre, pulsa <strong>Ver ficha</strong> para revisar sus datos o <strong>Eliminar</strong> para quitar definitivamente una ficha de prueba o troll. La eliminación siempre pide una confirmación adicional.</p>
       <div class="toolbar"><input id="searchRecords" type="search" placeholder="Buscar por RUT o nombre..." aria-label="Buscar por RUT o nombre" /><button id="clearSearch" class="secondary-button" type="button" hidden>Limpiar búsqueda</button><button id="refreshRecords" class="secondary-button" type="button">Actualizar registros</button></div>
       <div class="table-wrap"><table><thead><tr><th>RUT</th><th>Paciente</th><th>Fecha de atención</th><th>Última actualización</th><th>Acciones</th></tr></thead><tbody id="recordsBody"></tbody></table><div id="emptyRecords" class="empty" hidden>No hay fichas guardadas.</div></div>
     </section>
   </main>
 
-  <div id="detailModal" class="modal" hidden>
-    <section class="modal-card"><div class="modal-head"><div><p class="eyebrow">Ficha registrada</p><h2 id="detailTitle"></h2></div><button id="closeModal" class="modal-close" type="button">Cerrar</button></div><div id="detailGrid" class="detail-grid"></div></section>
-  </div>
-
-  <div id="deleteModal" class="modal" hidden>
-    <section class="modal-card confirm-card" role="dialog" aria-modal="true" aria-labelledby="deleteTitle">
-      <div class="modal-head"><div><p class="eyebrow">Acción administrativa</p><h2 id="deleteTitle">Eliminar ficha</h2></div><button id="closeDeleteModal" class="modal-close" type="button">Cancelar</button></div>
-      <p class="warning"><strong>Esta acción es permanente.</strong> La ficha seleccionada se eliminará del registro y no podrá recuperarse desde este panel.</p>
-      <p>Paciente: <strong id="deletePatientName">—</strong><br>RUT: <span id="deleteRut" class="confirm-rut">—</span></p>
-      <label><span>Para confirmar, escribe exactamente el RUT de la ficha:</span><input id="confirmRutInput" type="text" inputmode="text" autocomplete="off" placeholder="Ej.: 12345678K" /></label>
-      <p id="deleteError" class="admin-error" role="alert"></p>
-      <div class="confirm-actions"><button id="cancelDelete" class="cancel-button" type="button">Cancelar</button><button id="confirmDelete" class="delete-confirm" type="button" disabled>Eliminar ficha definitivamente</button></div>
-    </section>
-  </div>
-
+  <div id="detailModal" class="modal" hidden><section class="modal-card"><div class="modal-head"><div><p class="eyebrow">Ficha registrada</p><h2 id="detailTitle"></h2></div><button id="closeModal" class="modal-close" type="button">Cerrar</button></div><div id="detailGrid" class="detail-grid"></div></section></div>
+  <div id="deleteModal" class="modal" hidden><section class="modal-card confirm-card" role="dialog" aria-modal="true" aria-labelledby="deleteTitle"><div class="modal-head"><div><p class="eyebrow">Acción administrativa</p><h2 id="deleteTitle">Eliminar ficha</h2></div><button id="closeDeleteModal" class="modal-close" type="button">Cancelar</button></div><p class="warning"><strong>Esta acción es permanente.</strong> La ficha seleccionada se eliminará del registro y no podrá recuperarse desde este panel.</p><p>Paciente: <strong id="deletePatientName">—</strong><br>RUT: <span id="deleteRut" class="confirm-rut">—</span></p><label><span>Para confirmar, escribe exactamente el RUT de la ficha:</span><input id="confirmRutInput" type="text" inputmode="text" autocomplete="off" placeholder="Ej.: 12345678K" /></label><p id="deleteError" class="admin-error" role="alert"></p><div class="confirm-actions"><button id="cancelDelete" class="cancel-button" type="button">Cancelar</button><button id="confirmDelete" class="delete-confirm" type="button" disabled>Eliminar ficha definitivamente</button></div></section></div>
   <script src="admin.js"></script>
 </body>
 </html>
