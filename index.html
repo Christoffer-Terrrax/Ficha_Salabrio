@@ -9,20 +9,21 @@
     <link rel="stylesheet" href="styles.css" />
     <link rel="stylesheet" href="polish.css" />
     <link rel="stylesheet" href="final-ui.css" />
+    <link rel="stylesheet" href="theme-stability.css?v=2" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" defer></script>
-    <script src="theme.js" defer></script>
+    <script src="theme.js?v=3" defer></script>
   </head>
   <body>
     <div id="loginView" class="login-view">
       <main class="login-card" aria-labelledby="loginTitle">
         <div class="login-top-actions"><button id="themeToggleLogin" class="theme-toggle" type="button" aria-label="Cambiar tema">☾ Modo oscuro</button></div>
         <div class="login-brand-bar"><span class="login-brand-mark">FS</span><span>FICHASALIBRIO</span></div>
-        <img class="institution-logo login-logo" src="logo-montemaria.png" alt="Liceo Tecnológico Montemaría" />
+        <img class="institution-logo login-logo" src="logo-montemaria.png?v=2" alt="Liceo Tecnológico Montemaría" />
         <span class="product-chip">PLATAFORMA MÉDICA DIGITAL</span>
         <h1 id="loginTitle">Tu ficha. En un solo lugar.</h1>
         <p class="login-description">Accede con tu RUT para consultar y completar tu información médica institucional.</p>
         <form id="loginForm" class="login-form" novalidate>
-          <label for="loginRut"><span>RUT / RUN del paciente</span><input type="text" id="loginRut" name="loginRut" inputmode="text" autocomplete="username" placeholder="12.345.678-9" maxlength="12" required autofocus /></label>
+          <label for="loginRut"><span>RUT / RUN del paciente</span><input type="text" id="loginRut" name="loginRut" inputmode="text" autocomplete="username" placeholder="12.345.678-9" maxlength="12" required /></label>
           <p id="loginError" class="form-error" role="alert" hidden></p>
           <button class="primary-button login-button" type="submit">ENTRAR A MI FICHA</button>
         </form>
@@ -63,7 +64,7 @@
           </section>
 
           <main id="printableFicha" class="medical-document">
-            <header class="document-header"><img class="institution-logo document-logo" src="logo-montemaria.png" alt="Liceo Tecnológico Montemaría" /><div class="document-title"><p class="document-kicker">DESAFÍO TP · TELECOMUNICACIONES</p><h1>FichaSalibrio</h1><p>Ficha Médica Digital</p></div><div class="document-meta"><span>RUN</span><strong id="documentRut"></strong></div></header>
+            <header class="document-header"><img class="institution-logo document-logo" src="logo-montemaria.png?v=2" alt="Liceo Tecnológico Montemaría" /><div class="document-title"><p class="document-kicker">DESAFÍO TP · TELECOMUNICACIONES</p><h1>FichaSalibrio</h1><p>Ficha Médica Digital</p></div><div class="document-meta"><span>RUN</span><strong id="documentRut"></strong></div></header>
             <div class="document-body">
               <section id="identificacion" class="document-section"><div class="section-title"><span>01</span><div><p>Identificación</p><h2>Datos demográficos del paciente</h2></div></div><div class="grid three-columns">
                 <label><span>Nombre completo</span><input type="text" id="fullName" name="fullName" placeholder="Nombre y apellidos" autocomplete="name" required /></label>
