@@ -1,0 +1,1 @@
+The Montemaria logo is referenced from the supplied source image.
