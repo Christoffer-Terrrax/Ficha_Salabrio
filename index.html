@@ -3,20 +3,19 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#103050" />
+    <meta name="theme-color" content="#0b1118" />
     <meta name="description" content="FichaSalibrio - Ficha médica digital del Liceo Tecnológico Montemaría." />
     <title>FichaSalibrio | Liceo Tecnológico Montemaría</title>
     <link rel="stylesheet" href="styles.css" />
     <link rel="stylesheet" href="polish.css" />
     <link rel="stylesheet" href="final-ui.css" />
     <link rel="stylesheet" href="theme-stability.css?v=2" />
+    <link rel="stylesheet" href="dark-fixed.css?v=1" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" defer></script>
-    <script src="theme.js?v=3" defer></script>
   </head>
   <body>
     <div id="loginView" class="login-view">
       <main class="login-card" aria-labelledby="loginTitle">
-        <div class="login-top-actions"><button id="themeToggleLogin" class="theme-toggle" type="button" aria-label="Cambiar tema">☾ Modo oscuro</button></div>
         <div class="login-brand-bar"><span class="login-brand-mark">FS</span><span>FICHASALIBRIO</span></div>
         <img class="institution-logo login-logo" src="logo-montemaria.png?v=2" alt="Liceo Tecnológico Montemaría" />
         <span class="product-chip">PLATAFORMA MÉDICA DIGITAL</span>
@@ -52,7 +51,7 @@
         <div class="main-content">
           <header class="topbar no-print">
             <div class="brand-lockup"><p class="eyebrow">PLATAFORMA INSTITUCIONAL / PERFIL ACTIVO</p><h1>Centro de salud digital</h1><p class="session-label">Paciente identificado con RUN <strong id="sessionRut"></strong></p></div>
-            <div class="topbar-actions"><button id="themeToggleApp" class="theme-toggle" type="button" aria-label="Cambiar tema">☾ Modo oscuro</button><span class="online-badge"><i></i> CONECTADO</span><button class="top-logout" type="button" onclick="document.getElementById('logoutButton').click()">Salir</button></div>
+            <div class="topbar-actions"><span class="online-badge"><i></i> CONECTADO</span><button class="top-logout" type="button" onclick="document.getElementById('logoutButton').click()">Salir</button></div>
           </header>
 
           <section class="welcome-panel no-print"><div><p class="welcome-kicker">FICHASALIBRIO · PERFIL MÉDICO</p><h2>Tu información médica,<br /><span>organizada y disponible.</span></h2><p>Completa tus antecedentes para mantener tu ficha institucional actualizada.</p></div><div class="welcome-art" aria-hidden="true"><span class="art-ring ring-one"></span><span class="art-ring ring-two"></span><span class="art-core">FS</span></div></section>
