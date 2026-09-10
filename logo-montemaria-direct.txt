@@ -1,0 +1,1 @@
+Logo asset source checked against the supplied image reference.
