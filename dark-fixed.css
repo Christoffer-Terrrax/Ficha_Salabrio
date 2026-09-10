@@ -1,0 +1,155 @@
+/* FichaSalibrio - fixed dark institutional theme. Loaded last to prevent competing theme layers. */
+:root{
+  --fixed-bg:#0b1118;
+  --fixed-surface:#141d27;
+  --fixed-surface-2:#1b2732;
+  --fixed-surface-3:#23313d;
+  --fixed-text:#f3f6f8;
+  --fixed-muted:#a9b5bf;
+  --fixed-faint:#81909c;
+  --fixed-border:#31414e;
+  --fixed-blue:#68bce9;
+  --fixed-blue-strong:#38a1dc;
+  --fixed-orange:#f06a35;
+  --fixed-orange-2:#ff8b59;
+  --fixed-green:#54c29f;
+  --fixed-red:#ff7b72;
+  --fixed-shadow:0 22px 60px rgba(0,0,0,.34);
+  --fixed-shadow-soft:0 10px 28px rgba(0,0,0,.22);
+}
+html,body{background:var(--fixed-bg)!important;color:var(--fixed-text)!important}
+body{
+  min-width:320px!important;
+  background-image:
+    linear-gradient(135deg,transparent 0 71%,rgba(240,106,53,.10) 71% 72.1%,transparent 72.1% 74%,rgba(240,106,53,.18) 74% 75.1%,transparent 75.1%),
+    linear-gradient(180deg,var(--fixed-bg),var(--fixed-bg))!important;
+}
+body::before,body::after{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:-1;
+  opacity:1!important;
+}
+body::before{background:linear-gradient(135deg,transparent 0 82%,rgba(240,106,53,.11) 82% 83%,transparent 83% 85%,rgba(16,48,80,.10) 85% 86%,transparent 86%)!important}
+body::after{background:linear-gradient(135deg,transparent 0 60%,rgba(240,106,53,.05) 60% 60.7%,transparent 60.7%)!important}
+
+/* Remove visual remnants of the old theme system. */
+.theme-toggle{display:none!important}
+
+/* Shared surfaces and controls */
+.login-card,.sidebar,.topbar,.quick-card,.medical-document,.admin-card,.modal-card{
+  background:var(--fixed-surface)!important;
+  color:var(--fixed-text)!important;
+  border-color:var(--fixed-border)!important;
+  box-shadow:var(--fixed-shadow-soft)!important;
+}
+.login-card,.admin-card{box-shadow:var(--fixed-shadow)!important}
+.login-card{width:min(100%,600px)!important;border-radius:20px!important;padding:30px 40px 32px!important}
+.login-view{padding:24px 16px!important}
+.login-top-actions{display:none!important}
+.login-brand-bar{color:var(--fixed-text)!important;margin-bottom:14px!important}
+.login-brand-mark,.sidebar-logo{background:linear-gradient(135deg,var(--fixed-orange),var(--fixed-orange-2))!important}
+.institution-logo{background:transparent!important;object-fit:contain!important;mix-blend-mode:normal!important;filter:none!important}
+.login-logo{width:150px!important;height:150px!important;max-width:150px!important;margin:0 auto 12px!important}
+.product-chip{background:rgba(104,188,233,.10)!important;color:var(--fixed-blue)!important;border-color:rgba(104,188,233,.24)!important}
+.login-card h1,.topbar h1,.document-title h1,.section-title h2,.sidebar-brand strong,.quick-card strong,.admin-title,.admin-login h1,.detail strong{color:var(--fixed-text)!important}
+.login-description,.login-form label span,.medical-document label>span,.institution-footer,.session-label,.document-title p:last-child,.document-meta span,.bmi-status,.attachment-info,.upload-box p,.admin-login>p,.admin-help,.empty,.stat span{color:var(--fixed-muted)!important}
+.institution-footer strong,.eyebrow,.document-kicker,.section-title>span,.section-title p{color:var(--fixed-orange)!important}
+input,select,textarea,.login-form input,.medical-document input,.medical-document select,.medical-document textarea,.admin-form input,.toolbar input{
+  background:var(--fixed-surface-2)!important;
+  color:var(--fixed-text)!important;
+  border:1px solid var(--fixed-border)!important;
+}
+input::placeholder,textarea::placeholder{color:var(--fixed-faint)!important;opacity:1!important}
+input:focus,select:focus,textarea:focus{border-color:var(--fixed-blue)!important;box-shadow:0 0 0 3px rgba(104,188,233,.15)!important;background:var(--fixed-surface)!important}
+.primary-button{background:linear-gradient(135deg,var(--fixed-blue),var(--fixed-blue-strong))!important;color:#fff!important}
+.secondary-button,.ghost-button{background:var(--fixed-surface-2)!important;color:var(--fixed-text)!important;border-color:var(--fixed-border)!important}
+.accent-button{background:linear-gradient(135deg,var(--fixed-orange),var(--fixed-orange-2))!important;color:#fff!important}
+.danger-button{background:rgba(255,123,114,.10)!important;color:var(--fixed-red)!important;border-color:rgba(255,123,114,.25)!important}
+.admin-access{background:rgba(240,106,53,.10)!important;color:var(--fixed-orange-2)!important;border-color:rgba(240,106,53,.24)!important}
+
+/* Login composition */
+.login-card h1{font-size:clamp(2rem,5vw,2.75rem)!important;line-height:1.04!important;letter-spacing:-.045em!important}
+.login-description{max-width:470px!important;line-height:1.6!important}
+.login-form input{min-height:50px!important;border-radius:10px!important}
+.login-button{min-height:52px!important}
+.login-feature-row{color:var(--fixed-muted)!important}
+.login-feature-row span:first-child{color:var(--fixed-green)!important}
+
+/* Patient app */
+.app-layout{background:transparent!important}
+.sidebar{border-right:1px solid var(--fixed-border)!important}
+.side-nav-item{color:var(--fixed-muted)!important;border-left-color:transparent!important}
+.side-nav-item span{color:var(--fixed-faint)!important}
+.side-nav-item:hover{background:var(--fixed-surface-2)!important;color:var(--fixed-text)!important}
+.side-nav-item.active{background:rgba(104,188,233,.11)!important;border-left-color:var(--fixed-blue)!important;color:var(--fixed-text)!important}
+.side-nav-item.active span{color:var(--fixed-blue)!important}
+.main-content{padding:20px 28px 48px!important;background:transparent!important}
+.topbar{margin-bottom:14px!important}
+.online-badge,.session-label strong{color:var(--fixed-green)!important}
+.welcome-panel{background:linear-gradient(115deg,#102c42 0%,#1a5277 65%,#11293d 100%)!important;border-radius:16px!important;box-shadow:var(--fixed-shadow-soft)!important}
+.welcome-panel::after{background:radial-gradient(ellipse,rgba(240,106,53,.38),transparent 66%)!important}
+.quick-card{min-height:76px!important}
+.quick-card:hover{border-color:var(--fixed-blue)!important}
+.quick-icon{background:rgba(104,188,233,.10)!important;color:var(--fixed-blue)!important;border-color:rgba(104,188,233,.16)!important}
+.medical-document{border-radius:16px!important;overflow:hidden!important}
+.document-header{background:linear-gradient(90deg,var(--fixed-surface),var(--fixed-surface-2))!important;border-color:var(--fixed-border)!important}
+.document-logo{width:110px!important;height:110px!important;max-width:110px!important}
+.document-body{padding:4px 30px!important}
+.document-section{border-bottom-color:var(--fixed-border)!important}
+.document-footer,.upload-box,.stat{background:var(--fixed-surface-2)!important;color:var(--fixed-text)!important;border-color:var(--fixed-border)!important}
+.status-message{border-color:var(--fixed-border)!important}
+
+/* Admin */
+.admin-page{width:min(1120px,100%)!important;padding:28px 18px 52px!important}
+.admin-login{width:min(100%,520px)!important;margin:7vh auto!important}
+.admin-login .admin-logo{width:140px!important;height:140px!important;max-width:140px!important;margin:0 auto 12px!important}
+.password-hint{background:rgba(240,106,53,.10)!important;color:var(--fixed-orange-2)!important}
+.admin-header{border-bottom:1px solid var(--fixed-border)!important}
+.stat{border-radius:12px!important}
+.admin-help{background:rgba(240,106,53,.09)!important;border-left-color:var(--fixed-orange)!important;color:var(--fixed-text)!important}
+.table-wrap{border-color:var(--fixed-border)!important;background:var(--fixed-surface)!important}
+th{background:var(--fixed-surface-2)!important;color:var(--fixed-muted)!important;border-color:var(--fixed-border)!important}
+td{background:var(--fixed-surface)!important;color:var(--fixed-text)!important;border-color:var(--fixed-border)!important}
+.table-button{background:var(--fixed-blue-strong)!important;color:#fff!important}.delete-button,.delete-confirm{background:#b93a32!important;color:#fff!important}
+.modal{background:rgba(0,0,0,.72)!important}.detail{background:var(--fixed-surface-2)!important}.modal-close,.cancel-button{background:var(--fixed-surface-2)!important;color:var(--fixed-text)!important;border-color:var(--fixed-border)!important}.warning{background:rgba(240,106,53,.10)!important;color:var(--fixed-text)!important;border-color:rgba(240,106,53,.25)!important}
+
+/* Stable responsive layout: no horizontal page overflow. */
+@media(max-width:900px){
+  .app-layout{grid-template-columns:1fr!important}
+  .sidebar{position:relative!important;top:auto!important;height:auto!important;border-right:0!important;border-bottom:1px solid var(--fixed-border)!important;padding:12px!important}
+  .main-content{padding:14px 12px 40px!important}
+  .document-header{grid-template-columns:100px 1fr auto!important}
+}
+@media(max-width:680px){
+  .login-card{padding:22px 20px 26px!important;border-radius:18px!important}
+  .login-logo{width:128px!important;height:128px!important;max-width:128px!important}
+  .admin-page{padding:16px 10px 30px!important}
+  .admin-login{padding:24px 18px 26px!important}
+  .admin-login .admin-logo{width:120px!important;height:120px!important;max-width:120px!important}
+  .main-content{padding:10px 9px 32px!important}
+  .topbar{padding:14px!important}
+  .welcome-panel{padding:24px 20px!important;min-height:unset!important}
+  .welcome-art{display:none!important}
+  .quick-stats{grid-template-columns:1fr!important}
+  .document-header{grid-template-columns:1fr!important;padding:22px 20px!important}
+  .document-logo{width:92px!important;height:92px!important}
+  .document-body{padding:4px 18px!important}
+  .two-columns,.three-columns{grid-template-columns:1fr!important}
+  .action-bar>*{width:100%!important}
+  .table-wrap{overflow-x:auto!important}
+}
+@media(max-width:430px){
+  .login-view{padding:10px 8px!important}
+  .login-card{padding:20px 16px 24px!important}
+  .login-logo{width:116px!important;height:116px!important}
+  .login-card h1{font-size:2rem!important}
+  .main-content{padding-inline:7px!important}
+  .document-body{padding-inline:14px!important}
+}
+@media(max-width:360px){
+  .login-card{padding-inline:13px!important}
+  .document-body{padding-inline:11px!important}
+}
