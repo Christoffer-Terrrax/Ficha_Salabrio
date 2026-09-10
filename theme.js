@@ -3,6 +3,15 @@
   const storageKey = 'fichaSalabrioTheme';
   const metaTheme = document.querySelector('meta[name="theme-color"]');
 
+  const loadThemeStyles = () => {
+    if (document.querySelector('link[data-fichasalibrio-theme-stability]')) return;
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = 'theme-stability.css?v=2';
+    link.dataset.fichasalibrioThemeStability = 'true';
+    document.head.appendChild(link);
+  };
+
   const getTheme = () => {
     const saved = localStorage.getItem(storageKey);
     if (saved === 'dark' || saved === 'light') return saved;
@@ -22,6 +31,7 @@
     });
   };
 
+  loadThemeStyles();
   applyTheme(getTheme());
 
   document.addEventListener('click', (event) => {
