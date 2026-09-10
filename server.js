@@ -8,10 +8,12 @@ const ROOT = __dirname;
 const DATA_DIR = process.env.DATA_DIR || path.join(ROOT, 'data');
 const DB_FILE = path.join(DATA_DIR, 'patients.json');
 const MAX_BODY = 8 * 1024 * 1024;
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || '';
+// Demo fallback so the admin panel works immediately after deployment.
+// For a real deployment, set ADMIN_PASSWORD in Railway and replace the demo value.
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'admin1234';
 const adminSessions = new Map();
 
-const MIME = { '.html':'text/html; charset=utf-8', '.css':'text/css; charset=utf-8', '.js':'application/javascript; charset=utf-8', '.svg':'image/svg+xml', '.json':'application/json; charset=utf-8', '.ico':'image/x-icon' };
+const MIME = { '.html':'text/html; charset=utf-8', '.css':'text/css; charset=utf-8', '.js':'application/javascript; charset=utf-8', '.svg':'image/svg+xml', '.png':'image/png', '.json':'application/json; charset=utf-8', '.ico':'image/x-icon' };
 
 fs.mkdirSync(DATA_DIR, { recursive: true });
 if (!fs.existsSync(DB_FILE)) fs.writeFileSync(DB_FILE, '{}', 'utf8');
@@ -49,7 +51,6 @@ const server = http.createServer(async (req, res) => {
 
   if (url.pathname === '/api/admin/login' && req.method === 'POST') {
     try {
-      if (!ADMIN_PASSWORD) return send(res, 503, { error:'El acceso administrador aún no está configurado.' });
       const payload = await readJson(req); const supplied = String(payload.password || '');
       const a = Buffer.from(supplied); const b = Buffer.from(ADMIN_PASSWORD);
       const valid = a.length === b.length && crypto.timingSafeEqual(a, b);
@@ -77,11 +78,7 @@ const server = http.createServer(async (req, res) => {
     if (!key || key.length < 8) return send(res, 400, { error:'RUT inválido.' });
     const db = readDb();
     if (!db[key]) return send(res, 404, { error:'Ficha no encontrada.' });
-    if (req.method === 'DELETE') {
-      delete db[key];
-      writeDb(db);
-      return send(res, 200, { ok:true, message:'Ficha eliminada correctamente.' });
-    }
+    if (req.method === 'DELETE') { delete db[key]; writeDb(db); return send(res, 200, { ok:true, message:'Ficha eliminada correctamente.' }); }
     const item = db[key];
     return send(res, 200, { record:item.record, attachment:item.attachment ? { name:item.attachment.name, type:item.attachment.type, size:item.attachment.size } : null });
   }
@@ -92,8 +89,7 @@ const server = http.createServer(async (req, res) => {
     const db = readDb();
     if (req.method === 'GET') {
       if (!db[key]) return send(res, 404, { error:'Ficha no encontrada.' });
-      const { record, attachment } = db[key];
-      return send(res, 200, { record, attachment:attachment ? { name:attachment.name, type:attachment.type, size:attachment.size } : null });
+      const { record, attachment } = db[key]; return send(res, 200, { record, attachment:attachment ? { name:attachment.name, type:attachment.type, size:attachment.size } : null });
     }
     if (req.method === 'PUT') {
       try {
