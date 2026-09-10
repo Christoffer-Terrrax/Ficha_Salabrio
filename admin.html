@@ -6,6 +6,7 @@
   <meta name="theme-color" content="#103050" />
   <title>Administración | FichaSalibrio</title>
   <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="polish.css" />
   <script src="theme.js" defer></script>
 </head>
 <body>
@@ -18,21 +19,22 @@
       <p>Ingresa a la administración para consultar, revisar o eliminar fichas guardadas.</p>
       <form id="adminLoginForm" class="admin-form">
         <label><span>Contraseña de administrador</span><input id="adminPassword" type="password" autocomplete="current-password" value="admin1234" required /></label>
+        <p class="password-hint">La contraseña de demostración ya está cargada.</p>
         <p id="adminError" class="admin-error" role="alert"></p>
         <button class="primary-button login-button" type="submit">Ingresar como administrador</button>
       </form>
-      <p><a href="/" style="color:var(--navy);font-weight:700">Volver al acceso normal</a></p>
+      <p><a href="/" class="admin-back-link">Volver al acceso normal</a></p>
     </section>
   </main>
 
   <main id="dashboard" class="admin-page" hidden>
     <header class="admin-header">
-      <div class="admin-brand"><img class="institution-logo admin-logo" src="logo-montemaria.png" alt="Liceo Tecnológico Montemaría" /><div><p class="eyebrow">Acceso administrativo</p><h1 style="margin:0;color:var(--navy)">Registro de fichas</h1></div></div>
-      <div style="display:flex;gap:10px;align-items:center"><button class="theme-toggle" type="button">☾ Oscuro</button><button id="logoutAdmin" class="ghost-button" type="button">Cerrar sesión</button></div>
+      <div class="admin-brand"><img class="institution-logo admin-logo" src="logo-montemaria.png" alt="Liceo Tecnológico Montemaría" /><div><p class="eyebrow">Acceso administrativo</p><h1 class="admin-title">Registro de fichas</h1></div></div>
+      <div class="admin-header-actions"><button class="theme-toggle" type="button">☾ Oscuro</button><button id="logoutAdmin" class="ghost-button" type="button">Cerrar sesión</button></div>
     </header>
     <section class="admin-card">
       <div class="stats"><div class="stat"><strong id="recordCount">0</strong><span>Fichas registradas</span></div><div class="stat"><strong id="visibleCount">0</strong><span>Fichas mostradas</span></div></div>
-      <p class="admin-help"><strong>¿Qué puedes hacer aquí?</strong> Busca una ficha por RUT o nombre, pulsa <strong>Ver ficha</strong> para revisar sus datos o <strong>Eliminar</strong> para quitar definitivamente una ficha de prueba o troll. La eliminación siempre pide una confirmación adicional.</p>
+      <p class="admin-help"><strong>Panel de control</strong> · Busca una ficha por RUT o nombre. Puedes abrirla para revisarla o eliminarla de forma permanente cuando corresponda. Las eliminaciones requieren confirmar el RUT para evitar errores.</p>
       <div class="toolbar"><input id="searchRecords" type="search" placeholder="Buscar por RUT o nombre..." aria-label="Buscar por RUT o nombre" /><button id="clearSearch" class="secondary-button" type="button" hidden>Limpiar búsqueda</button><button id="refreshRecords" class="secondary-button" type="button">Actualizar registros</button></div>
       <div class="table-wrap"><table><thead><tr><th>RUT</th><th>Paciente</th><th>Fecha de atención</th><th>Última actualización</th><th>Acciones</th></tr></thead><tbody id="recordsBody"></tbody></table><div id="emptyRecords" class="empty" hidden>No hay fichas guardadas.</div></div>
     </section>
