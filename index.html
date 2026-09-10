@@ -7,6 +7,7 @@
     <meta name="description" content="FichaSalibrio - Ficha médica digital del Liceo Tecnológico Montemaría." />
     <title>FichaSalibrio | Liceo Tecnológico Montemaría</title>
     <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="polish.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" defer></script>
     <script src="theme.js" defer></script>
   </head>
@@ -20,10 +21,11 @@
         <h1 id="loginTitle">Tu ficha. En un solo lugar.</h1>
         <p class="login-description">Accede con tu RUT para consultar y completar tu información médica institucional.</p>
         <form id="loginForm" class="login-form" novalidate>
-          <label for="loginRut"><span>RUT / RUN del paciente</span><input type="text" id="loginRut" name="loginRut" inputmode="text" autocomplete="username" placeholder="12345678-9" maxlength="12" required autofocus /></label>
+          <label for="loginRut"><span>RUT / RUN del paciente</span><input type="text" id="loginRut" name="loginRut" inputmode="text" autocomplete="username" placeholder="12.345.678-9" maxlength="12" required autofocus /></label>
           <p id="loginError" class="form-error" role="alert" hidden></p>
           <button class="primary-button login-button" type="submit">ENTRAR A MI FICHA</button>
         </form>
+        <a class="admin-access" href="/admin.html">Acceso de administrador</a>
         <div class="login-feature-row" aria-hidden="true"><span>● Seguro</span><span>● Simple</span><span>● Institucional</span></div>
         <div class="institution-footer"><strong>Liceo Tecnológico Montemaría</strong><span>Río Trancura 115 · Pucón · La Araucanía</span></div>
       </main>
