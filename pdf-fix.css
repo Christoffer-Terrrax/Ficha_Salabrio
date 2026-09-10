@@ -1,0 +1,91 @@
+/* PDF/print export layer: keeps the web app dark, but produces a clean A4 document. */
+.pdf-exporting,
+.pdf-exporting body{
+  background:#ffffff!important;
+  color:#17212b!important;
+}
+.pdf-exporting #printableFicha{
+  width:190mm!important;
+  max-width:190mm!important;
+  margin:0 auto!important;
+  background:#ffffff!important;
+  color:#17212b!important;
+  border:1px solid #d7dee5!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+  overflow:visible!important;
+}
+.pdf-exporting #printableFicha *{
+  color:#17212b!important;
+  border-color:#d7dee5!important;
+  box-shadow:none!important;
+  text-shadow:none!important;
+}
+.pdf-exporting #printableFicha .document-header,
+.pdf-exporting #printableFicha .document-footer,
+.pdf-exporting #printableFicha .upload-box,
+.pdf-exporting #printableFicha .document-section{
+  background:#ffffff!important;
+}
+.pdf-exporting #printableFicha .document-title h1,
+.pdf-exporting #printableFicha .section-title h2{
+  color:#17212b!important;
+}
+.pdf-exporting #printableFicha .document-kicker,
+.pdf-exporting #printableFicha .section-title>span,
+.pdf-exporting #printableFicha .section-title p,
+.pdf-exporting #printableFicha .document-meta strong{
+  color:#d94d1b!important;
+}
+.pdf-exporting #printableFicha input,
+.pdf-exporting #printableFicha select,
+.pdf-exporting #printableFicha textarea{
+  background:#f7f9fb!important;
+  color:#17212b!important;
+  border:1px solid #cfd8e0!important;
+  -webkit-text-fill-color:#17212b!important;
+}
+.pdf-exporting #printableFicha input::placeholder,
+.pdf-exporting #printableFicha textarea::placeholder{
+  color:transparent!important;
+}
+.pdf-exporting #printableFicha .document-logo{
+  width:auto!important;
+  height:auto!important;
+  max-width:150px!important;
+  max-height:88px!important;
+  object-fit:contain!important;
+}
+.pdf-exporting #printableFicha .attachment-section{display:none!important}
+.pdf-exporting #printableFicha .print-only[hidden]{display:none!important}
+.pdf-exporting #printableFicha .document-section{break-inside:avoid;page-break-inside:avoid}
+.pdf-exporting #printableFicha .document-header{break-inside:avoid;page-break-inside:avoid}
+.pdf-exporting #printableFicha .document-footer{break-inside:avoid;page-break-inside:avoid}
+
+@page{size:A4 portrait;margin:10mm}
+@media print{
+  html,body{background:#ffffff!important;color:#17212b!important}
+  body{margin:0!important}
+  .no-print{display:none!important}
+  .print-only{display:block!important}
+  #printableFicha{
+    width:100%!important;
+    max-width:none!important;
+    margin:0!important;
+    border:1px solid #d7dee5!important;
+    border-radius:0!important;
+    box-shadow:none!important;
+    background:#ffffff!important;
+    color:#17212b!important;
+  }
+  #printableFicha *{color:#17212b!important;border-color:#d7dee5!important;box-shadow:none!important;text-shadow:none!important}
+  #printableFicha .document-kicker,
+  #printableFicha .section-title>span,
+  #printableFicha .section-title p,
+  #printableFicha .document-meta strong{color:#d94d1b!important}
+  #printableFicha input,
+  #printableFicha select,
+  #printableFicha textarea{background:#f7f9fb!important;color:#17212b!important;-webkit-text-fill-color:#17212b!important}
+  #printableFicha .attachment-section{display:none!important}
+  #printableFicha .document-section{break-inside:avoid;page-break-inside:avoid}
+}
