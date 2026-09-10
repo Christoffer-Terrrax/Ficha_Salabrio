@@ -1,25 +1,40 @@
-/* Fallback visual para el logo: mantiene la foto PNG y muestra el SVG local detrás si el PNG no carga. */
-.brand-logo,
-.document-logo,
-.login-logo,
+/* FIX DEFINITIVO DEL LOGO: reemplaza el PNG que está fallando por el SVG estable. */
+img.institution-logo,
 img[src*="logo-montemaria.png"] {
-  background-image: url("logo-montemaria-fixed.svg?v=2");
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: contain;
+  content: url("logo-montemaria-fixed.svg?v=5");
+  display: block;
+  object-fit: contain;
+  object-position: center;
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  background: transparent !important;
 }
 
+.login-logo {
+  width: min(210px, 75%);
+  height: 105px;
+  margin: 0 auto 18px;
+}
+
+.document-logo {
+  width: 150px;
+  height: 88px;
+  max-width: 150px;
+  max-height: 88px;
+}
+
+/* Evita que el navegador muestre el icono de imagen rota o el PNG corrupto. */
 img[src*="logo-montemaria.png"] {
+  font-size: 0;
   color: transparent;
 }
 
-.brand-logo,
-.login-logo,
-.document-logo {
-  object-fit: contain;
-}
-
-.document-logo {
-  max-width: 150px;
-  max-height: 88px;
+/* El logo del PDF debe usar el mismo recurso estable. */
+@media print {
+  .document-logo {
+    content: url("logo-montemaria-fixed.svg?v=5");
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
 }
