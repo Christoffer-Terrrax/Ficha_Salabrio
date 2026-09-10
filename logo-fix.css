@@ -54,3 +54,27 @@
   .admin-brand .admin-logo{max-width:95px!important;max-height:64px!important}
   .document-logo{max-width:125px!important;max-height:75px!important}
 }
+
+/* Opening title: product name first, slogan underneath. */
+#loginTitle{
+  display:grid!important;
+  gap:6px!important;
+  font-size:0!important;
+  line-height:1.04!important;
+}
+#loginTitle::before{
+  content:"FichaSalibrio";
+  display:block;
+  color:var(--fixed-orange)!important;
+  font-size:clamp(1.05rem,2.8vw,1.35rem)!important;
+  line-height:1.05!important;
+  letter-spacing:-.02em!important;
+}
+#loginTitle::after{
+  content:"Tu ficha. En un solo lugar.";
+  display:block;
+  color:var(--fixed-text)!important;
+  font-size:clamp(2rem,5vw,2.75rem)!important;
+  line-height:1.04!important;
+  letter-spacing:-.045em!important;
+}
