@@ -1,102 +1,51 @@
 <!DOCTYPE html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#0b1118" />
-    <meta name="description" content="FichaSalibrio - Ficha médica digital del Liceo Tecnológico Montemaría." />
-    <title>FichaSalibrio | Liceo Tecnológico Montemaría</title>
-    <link rel="stylesheet" href="styles.css" />
-    <link rel="stylesheet" href="polish.css" />
-    <link rel="stylesheet" href="final-ui.css" />
-    <link rel="stylesheet" href="theme-stability.css?v=2" />
-    <link rel="stylesheet" href="dark-fixed.css?v=1" />
-    <link rel="stylesheet" href="logo-fix.css?v=3" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" defer></script>
-  </head>
-  <body>
-    <div id="loginView" class="login-view">
-      <main class="login-card" aria-labelledby="loginTitle">
-        <div class="login-brand-bar"><span class="login-brand-mark">FS</span><span>FichaSalibrio</span></div>
-        <img class="institution-logo login-logo" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT8ZK77KEeKlj0afnVRG8F0sCdrjZdEuGagxWJoePjmHpnOEZZZmHRzBNPP&s=10" alt="Liceo Tecnológico Montemaría" referrerpolicy="no-referrer" onerror="this.onerror=null;this.src='logo-montemaria.png?v=3';" />
-        <span class="product-chip">PLATAFORMA MÉDICA DIGITAL</span>
-        <h1 id="loginTitle">Tu ficha. En un solo lugar.</h1>
-        <p class="login-description">Accede con tu RUT para consultar y completar tu información médica institucional.</p>
-        <form id="loginForm" class="login-form" novalidate>
-          <label for="loginRut"><span>RUT / RUN del paciente</span><input type="text" id="loginRut" name="loginRut" inputmode="text" autocomplete="username" placeholder="12.345.678-9" maxlength="12" required /></label>
-          <p id="loginError" class="form-error" role="alert" hidden></p>
-          <button class="primary-button login-button" type="submit">ENTRAR A MI FICHA</button>
-        </form>
-        <a class="admin-access" href="/admin.html">Acceso de administrador</a>
-        <div class="login-feature-row" aria-hidden="true"><span>● Seguro</span><span>● Simple</span><span>● Institucional</span></div>
-        <div class="institution-footer"><strong>Liceo Tecnológico Montemaría</strong><span>Río Trancura 115 · Pucón · La Araucanía</span></div>
-      </main>
-    </div>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0b1118" />
+  <meta name="description" content="FichaSalabrio - Ficha médica digital del Liceo Tecnológico Montemaría." />
+  <title>FichaSalabrio | Liceo Tecnológico Montemaría</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="polish.css" />
+  <link rel="stylesheet" href="final-ui.css" />
+  <link rel="stylesheet" href="theme-stability.css?v=2" />
+  <link rel="stylesheet" href="dark-fixed.css?v=1" />
+  <link rel="stylesheet" href="logo-fix.css?v=4" />
+  <link rel="stylesheet" href="history.css?v=1" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" defer></script>
+</head>
+<body>
+<div id="loginView" class="login-view"><main class="login-card" aria-labelledby="loginTitle">
+  <div class="login-brand-bar"><span class="login-brand-mark">FS</span><span>FichaSalabrio</span></div>
+  <img class="institution-logo login-logo" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT8ZK77KEeKlj0afnVRG8F0sCdrjZdEuGagxWJoePjmHpnOEZZZmHRzBNPP&s=10" alt="Liceo Tecnológico Montemaría" referrerpolicy="no-referrer" onerror="this.onerror=null;this.src='logo-montemaria.png?v=3';" />
+  <span class="product-chip">PLATAFORMA MÉDICA DIGITAL</span>
+  <h1 id="loginTitle">Tu ficha. En un solo lugar.</h1>
+  <p class="login-description">Accede con tu RUT para consultar y completar tu información médica institucional.</p>
+  <form id="loginForm" class="login-form" novalidate><label for="loginRut"><span>RUT / RUN del paciente</span><input type="text" id="loginRut" name="loginRut" inputmode="text" autocomplete="username" placeholder="12.345.678-9" maxlength="12" required /></label><p id="loginError" class="form-error" role="alert" hidden></p><button class="primary-button login-button" type="submit">ENTRAR A MI FICHA</button></form>
+  <a class="admin-access" href="/admin.html">Acceso de administrador</a>
+  <div class="login-feature-row" aria-hidden="true"><span>● Seguro</span><span>● Simple</span><span>● Institucional</span></div>
+  <div class="institution-footer"><strong>Liceo Tecnológico Montemaría</strong><span>Río Trancura 115 · Pucón · La Araucanía</span></div>
+</main></div>
 
-    <div id="appView" class="app-view" hidden>
-      <div class="app-layout">
-        <aside class="sidebar no-print">
-          <div class="sidebar-brand"><span class="sidebar-logo">FS</span><div><strong>FichaSalibrio</strong><small>MEDICAL HUB</small></div></div>
-          <div class="sidebar-divider"></div>
-          <p class="sidebar-label">MI FICHA</p>
-          <nav class="side-nav" aria-label="Navegación de la ficha">
-            <a class="side-nav-item active" href="#identificacion"><span>01</span>Identificación</a>
-            <a class="side-nav-item" href="#contacto"><span>02</span>Contacto</a>
-            <a class="side-nav-item" href="#informacion-medica"><span>03</span>Información médica</a>
-            <a class="side-nav-item" href="#atencion"><span>04</span>Atención</a>
-            <a class="side-nav-item" href="#documentacion"><span>05</span>Documentación</a>
-          </nav>
-          <div class="sidebar-bottom"><div class="sidebar-status"><span></span> Sistema operativo</div><button id="logoutButton" class="ghost-button sidebar-logout" type="button">Cerrar sesión</button></div>
-        </aside>
+<div id="appView" class="app-view" hidden><div class="app-layout">
+<aside class="sidebar no-print"><div class="sidebar-brand"><span class="sidebar-logo">FS</span><div><strong>FichaSalabrio</strong><small>MEDICAL HUB</small></div></div><div class="sidebar-divider"></div><p class="sidebar-label">MI FICHA</p>
+<nav class="side-nav" aria-label="Navegación de la ficha">
+<a class="side-nav-item active" href="#identificacion"><span>01</span>Identificación</a><a class="side-nav-item" href="#contacto"><span>02</span>Contacto</a><a class="side-nav-item" href="#informacion-medica"><span>03</span>Información médica</a><a class="side-nav-item" href="#atencion"><span>04</span>Atención</a><a class="side-nav-item" href="#documentacion"><span>05</span>Documentación</a><a class="side-nav-item" href="#historial"><span>06</span>Historial</a>
+</nav><div class="sidebar-bottom"><div class="sidebar-status"><span></span> Sistema operativo</div><button id="logoutButton" class="ghost-button sidebar-logout" type="button">Cerrar sesión</button></div></aside>
+<div class="main-content"><header class="topbar no-print"><div class="brand-lockup"><p class="eyebrow">PLATAFORMA INSTITUCIONAL / PERFIL ACTIVO</p><h1>Centro de salud digital</h1><p class="session-label">Paciente identificado con RUN <strong id="sessionRut"></strong></p></div><div class="topbar-actions"><span class="online-badge"><i></i> CONECTADO</span><button class="top-logout" type="button" onclick="document.getElementById('logoutButton').click()">Salir</button></div></header>
+<section class="welcome-panel no-print"><div><p class="welcome-kicker">FICHASALABRIO · PERFIL MÉDICO</p><h2>Tu información médica,<br /><span>organizada y disponible.</span></h2><p>Completa tus antecedentes para mantener tu ficha institucional actualizada.</p></div><div class="welcome-art" aria-hidden="true"><span class="art-ring ring-one"></span><span class="art-ring ring-two"></span><span class="art-core">FS</span></div></section>
+<section class="quick-stats no-print" aria-label="Resumen de la ficha"><a class="quick-card" href="#identificacion"><span class="quick-icon">ID</span><span><small>PERFIL</small><strong>Identificación</strong></span><b>›</b></a><a class="quick-card" href="#informacion-medica"><span class="quick-icon">+</span><span><small>SALUD</small><strong>Antecedentes</strong></span><b>›</b></a><a class="quick-card" href="#atencion"><span class="quick-icon">▣</span><span><small>REGISTRO</small><strong>Atención clínica</strong></span><b>›</b></a><a class="quick-card" href="#historial"><span class="quick-icon">↺</span><span><small>HISTORIAL</small><strong>Consultas anteriores</strong></span><b>›</b></a></section>
 
-        <div class="main-content">
-          <header class="topbar no-print">
-            <div class="brand-lockup"><p class="eyebrow">PLATAFORMA INSTITUCIONAL / PERFIL ACTIVO</p><h1>Centro de salud digital</h1><p class="session-label">Paciente identificado con RUN <strong id="sessionRut"></strong></p></div>
-            <div class="topbar-actions"><span class="online-badge"><i></i> CONECTADO</span><button class="top-logout" type="button" onclick="document.getElementById('logoutButton').click()">Salir</button></div>
-          </header>
+<section id="historial" class="history-panel no-print"><div class="section-title"><span>06</span><div><p>Historial del paciente</p><h2>Consultas anteriores</h2></div></div><p id="historySummary" class="history-summary">No hay consultas anteriores registradas todavía.</p><div id="historyList" class="history-list"><div class="history-empty">Las próximas consultas quedarán almacenadas aquí automáticamente.</div></div></section>
 
-          <section class="welcome-panel no-print"><div><p class="welcome-kicker">FICHASALIBRIO · PERFIL MÉDICO</p><h2>Tu información médica,<br /><span>organizada y disponible.</span></h2><p>Completa tus antecedentes para mantener tu ficha institucional actualizada.</p></div><div class="welcome-art" aria-hidden="true"><span class="art-ring ring-one"></span><span class="art-ring ring-two"></span><span class="art-core">FS</span></div></section>
-          <section class="quick-stats no-print" aria-label="Resumen de la ficha">
-            <a class="quick-card" href="#identificacion"><span class="quick-icon">ID</span><span><small>PERFIL</small><strong>Identificación</strong></span><b>›</b></a>
-            <a class="quick-card" href="#informacion-medica"><span class="quick-icon">+</span><span><small>SALUD</small><strong>Antecedentes</strong></span><b>›</b></a>
-            <a class="quick-card" href="#atencion"><span class="quick-icon">▣</span><span><small>REGISTRO</small><strong>Atención clínica</strong></span><b>›</b></a>
-            <a class="quick-card" href="#documentacion"><span class="quick-icon">↑</span><span><small>ARCHIVOS</small><strong>Documentación</strong></span><b>›</b></a>
-          </section>
-
-          <main id="printableFicha" class="medical-document">
-            <header class="document-header"><img class="institution-logo document-logo" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT8ZK77KEeKlj0afnVRG8F0sCdrjZdEuGagxWJoePjmHpnOEZZZmHRzBNPP&s=10" alt="Liceo Tecnológico Montemaría" referrerpolicy="no-referrer" onerror="this.onerror=null;this.src='logo-montemaria.png?v=3';" /><div class="document-title"><p class="document-kicker">DESAFÍO TP · TELECOMUNICACIONES</p><h1>FichaSalibrio</h1><p>Ficha Médica Digital</p></div><div class="document-meta"><span>RUN</span><strong id="documentRut"></strong></div></header>
-            <div class="document-body">
-              <section id="identificacion" class="document-section"><div class="section-title"><span>01</span><div><p>Identificación</p><h2>Datos demográficos del paciente</h2></div></div><div class="grid three-columns">
-                <label><span>Nombre completo</span><input type="text" id="fullName" name="fullName" placeholder="Nombre y apellidos" autocomplete="name" required /></label>
-                <label><span>Fecha de nacimiento</span><input type="date" id="birthDate" name="birthDate" required /></label>
-                <label><span>Edad</span><input type="number" id="age" name="age" min="0" max="120" inputmode="numeric" required /></label>
-                <label><span>RUN / RUT</span><input type="text" id="document" name="document" readonly aria-readonly="true" /></label>
-                <label><span>Género</span><select id="gender" name="gender"><option value="">Seleccione...</option><option>Femenino</option><option>Masculino</option><option>Otro</option><option>Prefiere no indicar</option></select></label>
-                <label><span>Teléfono</span><input type="tel" id="phone" name="phone" inputmode="tel" placeholder="+56 9..." /></label>
-                <label class="full-span"><span>Dirección / sector de residencia</span><input type="text" id="address" name="address" placeholder="Dirección o sector" /></label>
-              </div></section>
-              <section id="contacto" class="document-section"><div class="section-title"><span>02</span><div><p>Contacto</p><h2>En caso de emergencia</h2></div></div><div class="grid three-columns">
-                <label><span>Nombre del contacto</span><input type="text" id="emergencyName" name="emergencyName" placeholder="Nombre completo" /></label>
-                <label><span>Parentesco / relación</span><input type="text" id="emergencyRelation" name="emergencyRelation" placeholder="Madre, padre, tutor, etc." /></label>
-                <label><span>Teléfono</span><input type="tel" id="emergencyPhone" name="emergencyPhone" inputmode="tel" placeholder="+56 9..." /></label>
-              </div></section>
-              <section id="informacion-medica" class="document-section"><div class="section-title"><span>03</span><div><p>Información médica</p><h2>Antecedentes y condiciones</h2></div></div>
-                <div class="grid two-columns"><label><span>Previsión / sistema de salud</span><select id="insurance" name="insurance"><option value="">Seleccione...</option><option>Fonasa</option><option>Isapre</option><option>Particular</option><option>Otro</option></select></label><label><span>Grupo sanguíneo y RH</span><select id="bloodType" name="bloodType"><option value="">No informado</option><option>A+</option><option>A-</option><option>B+</option><option>B-</option><option>AB+</option><option>AB-</option><option>O+</option><option>O-</option></select></label></div>
-                <div class="grid three-columns measurements-grid"><label><span>Peso (kg)</span><input type="number" id="weight" name="weight" min="1" max="500" step="0.1" inputmode="decimal" placeholder="Ej. 70.5" /></label><label><span>Altura (cm)</span><input type="number" id="height" name="height" min="30" max="250" step="0.1" inputmode="decimal" placeholder="Ej. 175" /></label><label><span>IMC</span><input type="text" id="bmi" name="bmi" readonly aria-readonly="true" placeholder="Automático" /></label><p id="bmiStatus" class="bmi-status full-span" aria-live="polite"></p></div>
-                <div class="grid two-columns"><label class="full-span"><span>Alergias conocidas</span><input type="text" id="allergies" name="allergies" placeholder="Medicamentos, alimentos u otras. Indique 'Ninguna' si corresponde." /></label><label class="full-span"><span>Antecedentes médicos / enfermedades crónicas</span><textarea id="medicalHistory" name="medicalHistory" rows="4" placeholder="Diagnósticos, cirugías, condiciones relevantes..."></textarea></label><label class="full-span"><span>Medicamentos de uso habitual</span><textarea id="medications" name="medications" rows="3" placeholder="Medicamentos y dosis, si corresponde"></textarea></label></div>
-              </section>
-              <section id="atencion" class="document-section"><div class="section-title"><span>04</span><div><p>Atención</p><h2>Registro clínico</h2></div></div><div class="grid two-columns">
-                <label><span>Fecha de atención</span><input type="date" id="date" name="date" required /></label><label><span>Profesional / responsable</span><input type="text" id="professional" name="professional" placeholder="Nombre del profesional o responsable" /></label><label class="full-span"><span>Motivo de consulta</span><input type="text" id="reason" name="reason" placeholder="Motivo principal de atención" /></label><label class="full-span"><span>Síntomas / evaluación</span><textarea id="symptoms" name="symptoms" rows="4" placeholder="Descripción de síntomas, signos o evaluación"></textarea></label><label class="full-span"><span>Diagnóstico / impresión clínica</span><textarea id="diagnosis" name="diagnosis" rows="3" placeholder="Diagnóstico o impresión clínica"></textarea></label><label class="full-span"><span>Tratamiento / indicaciones</span><textarea id="treatment" name="treatment" rows="4" placeholder="Tratamiento, indicaciones y seguimiento"></textarea></label><label class="full-span"><span>Observaciones</span><textarea id="notes" name="notes" rows="4" placeholder="Información adicional relevante"></textarea></label>
-              </div></section>
-              <section id="documentacion" class="document-section attachment-section no-print"><div class="section-title"><span>05</span><div><p>Documentación</p><h2>Adjuntar documento o examen</h2></div></div><div class="upload-box"><input type="file" id="attachment" name="attachment" accept="application/pdf,image/png,image/jpeg,image/webp" /><p>PDF, JPG, PNG o WEBP · máximo 5 MB</p><div id="attachmentInfo" class="attachment-info">No hay documento seleccionado.</div></div></section>
-              <section class="attachment-print-section print-only" id="attachmentPrintSection" hidden><div class="section-title"><span>05</span><div><p>Documentación</p><h2>Documento adjunto</h2></div></div><p id="attachmentPrintName"></p></section>
-            </div><footer class="document-footer"><span>FichaSalibrio · Liceo Tecnológico Montemaría · Pucón</span><span id="documentDate"></span></footer>
-          </main>
-          <div class="action-bar no-print"><button class="primary-button" id="saveButton" type="button">Guardar ficha</button><button class="secondary-button" id="printButton" type="button">Imprimir ficha</button><button class="accent-button" id="pdfButton" type="button">Descargar PDF</button><button class="danger-button" id="clearButton" type="button">Limpiar</button></div>
-          <p id="statusMessage" class="status-message no-print" role="status" hidden></p>
-        </div>
-      </div>
-    </div>
-    <script src="app.js"></script>
-  </body>
-</html>
+<main id="printableFicha" class="medical-document"><header class="document-header"><img class="institution-logo document-logo" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT8ZK77KEeKlj0afnVRG8F0sCdrjZdEuGagxWJoePjmHpnOEZZZmHRzBNPP&s=10" alt="Liceo Tecnológico Montemaría" referrerpolicy="no-referrer" onerror="this.onerror=null;this.src='logo-montemaria.png?v=3';" /><div class="document-title"><p class="document-kicker">DESAFÍO TP · TELECOMUNICACIONES</p><h1>FichaSalabrio</h1><p>Ficha Médica Digital</p></div><div class="document-meta"><span>RUN</span><strong id="documentRut"></strong></div></header><div class="document-body">
+<section id="identificacion" class="document-section"><div class="section-title"><span>01</span><div><p>Identificación</p><h2>Datos demográficos del paciente</h2></div></div><div class="grid three-columns"><label><span>Nombre completo</span><input type="text" id="fullName" name="fullName" placeholder="Nombre y apellidos" autocomplete="name" required /></label><label><span>Fecha de nacimiento</span><input type="date" id="birthDate" name="birthDate" required /></label><label><span>Edad</span><input type="number" id="age" name="age" min="0" max="120" inputmode="numeric" required /></label><label><span>RUN / RUT</span><input type="text" id="document" name="document" readonly aria-readonly="true" /></label><label><span>Género</span><select id="gender" name="gender"><option value="">Seleccione...</option><option>Femenino</option><option>Masculino</option><option>Otro</option><option>Prefiere no indicar</option></select></label><label><span>Teléfono</span><input type="tel" id="phone" name="phone" inputmode="tel" placeholder="+56 9..." /></label><label class="full-span"><span>Dirección / sector de residencia</span><input type="text" id="address" name="address" placeholder="Dirección o sector" /></label></div></section>
+<section id="contacto" class="document-section"><div class="section-title"><span>02</span><div><p>Contacto</p><h2>En caso de emergencia</h2></div></div><div class="grid three-columns"><label><span>Nombre del contacto</span><input type="text" id="emergencyName" name="emergencyName" placeholder="Nombre completo" /></label><label><span>Parentesco / relación</span><input type="text" id="emergencyRelation" name="emergencyRelation" placeholder="Madre, padre, tutor, etc." /></label><label><span>Teléfono</span><input type="tel" id="emergencyPhone" name="emergencyPhone" inputmode="tel" placeholder="+56 9..." /></label></div></section>
+<section id="informacion-medica" class="document-section"><div class="section-title"><span>03</span><div><p>Información médica</p><h2>Antecedentes y condiciones</h2></div></div><div class="grid two-columns"><label><span>Previsión / sistema de salud</span><select id="insurance" name="insurance"><option value="">Seleccione...</option><option>Fonasa</option><option>Isapre</option><option>Particular</option><option>Otro</option></select></label><label><span>Grupo sanguíneo y RH</span><select id="bloodType" name="bloodType"><option value="">No informado</option><option>A+</option><option>A-</option><option>B+</option><option>B-</option><option>AB+</option><option>AB-</option><option>O+</option><option>O-</option></select></label></div><div class="grid three-columns measurements-grid"><label><span>Peso (kg)</span><input type="number" id="weight" name="weight" min="1" max="500" step="0.1" inputmode="decimal" placeholder="Ej. 70.5" /></label><label><span>Altura (cm)</span><input type="number" id="height" name="height" min="30" max="250" step="0.1" inputmode="decimal" placeholder="Ej. 175" /></label><label><span>IMC</span><input type="text" id="bmi" name="bmi" readonly aria-readonly="true" placeholder="Automático" /></label><p id="bmiStatus" class="bmi-status full-span" aria-live="polite"></p></div><div class="grid two-columns"><label class="full-span"><span>Alergias conocidas</span><input type="text" id="allergies" name="allergies" placeholder="Medicamentos, alimentos u otras. Indique 'Ninguna' si corresponde." /></label><label class="full-span"><span>Antecedentes médicos / enfermedades crónicas</span><textarea id="medicalHistory" name="medicalHistory" rows="4" placeholder="Diagnósticos, cirugías, condiciones relevantes..."></textarea></label><label class="full-span"><span>Medicamentos de uso habitual</span><textarea id="medications" name="medications" rows="3" placeholder="Medicamentos y dosis, si corresponde"></textarea></label></div></section>
+<section id="atencion" class="document-section"><div class="section-title"><span>04</span><div><p>Atención</p><h2>Registro clínico</h2></div></div><div class="grid two-columns"><label><span>Fecha de atención</span><input type="date" id="date" name="date" required /></label><label><span>Profesional / responsable</span><input type="text" id="professional" name="professional" placeholder="Nombre del profesional o responsable" /></label><label class="full-span"><span>Motivo de consulta</span><input type="text" id="reason" name="reason" placeholder="Motivo principal de atención" /></label><label class="full-span"><span>Síntomas / evaluación</span><textarea id="symptoms" name="symptoms" rows="4" placeholder="Descripción de síntomas, signos o evaluación"></textarea></label><label class="full-span"><span>Diagnóstico / impresión clínica</span><textarea id="diagnosis" name="diagnosis" rows="3" placeholder="Diagnóstico o impresión clínica"></textarea></label><label class="full-span"><span>Tratamiento / indicaciones</span><textarea id="treatment" name="treatment" rows="4" placeholder="Tratamiento, indicaciones y seguimiento"></textarea></label><label class="full-span"><span>Observaciones</span><textarea id="notes" name="notes" rows="4" placeholder="Información adicional relevante"></textarea></label></div></section>
+<section id="documentacion" class="document-section attachment-section no-print"><div class="section-title"><span>05</span><div><p>Documentación</p><h2>Adjuntar documento o examen</h2></div></div><div class="upload-box"><input type="file" id="attachment" name="attachment" accept="application/pdf,image/png,image/jpeg,image/webp" /><p>PDF, JPG, PNG o WEBP · máximo 5 MB</p><div id="attachmentInfo" class="attachment-info">No hay documento seleccionado.</div></div></section>
+<section class="attachment-print-section print-only" id="attachmentPrintSection" hidden><div class="section-title"><span>05</span><div><p>Documentación</p><h2>Documento adjunto</h2></div></div><p id="attachmentPrintName"></p></section></div><footer class="document-footer"><span>FichaSalabrio · Liceo Tecnológico Montemaría · Pucón</span><span id="documentDate"></span></footer></main>
+<div class="action-bar no-print"><button class="secondary-button" id="newConsultationButton" type="button">Nueva consulta</button><button class="primary-button" id="saveButton" type="button">Guardar ficha</button><button class="secondary-button" id="printButton" type="button">Imprimir ficha</button><button class="accent-button" id="pdfButton" type="button">Descargar PDF</button><button class="danger-button" id="clearButton" type="button">Limpiar</button></div><p id="statusMessage" class="status-message no-print" role="status" hidden></p></div></div></div>
+<script src="app.js"></script>
+</body></html>
