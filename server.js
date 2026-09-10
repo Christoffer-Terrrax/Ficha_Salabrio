@@ -12,112 +12,41 @@ const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'admin1234';
 const adminSessions = new Map();
 
 const MIME = { '.html':'text/html; charset=utf-8', '.css':'text/css; charset=utf-8', '.js':'application/javascript; charset=utf-8', '.svg':'image/svg+xml', '.json':'application/json; charset=utf-8', '.png':'image/png', '.jpg':'image/jpeg', '.jpeg':'image/jpeg', '.webp':'image/webp', '.ico':'image/x-icon' };
-
 fs.mkdirSync(DATA_DIR, { recursive: true });
 if (!fs.existsSync(DB_FILE)) fs.writeFileSync(DB_FILE, '{}', 'utf8');
-
 const readDb = () => { try { return JSON.parse(fs.readFileSync(DB_FILE, 'utf8') || '{}'); } catch { return {}; } };
 const writeDb = (db) => { const temp = `${DB_FILE}.${crypto.randomUUID()}.tmp`; fs.writeFileSync(temp, JSON.stringify(db, null, 2), 'utf8'); fs.renameSync(temp, DB_FILE); };
 const normalizeRut = (value) => { const clean = String(value || '').toUpperCase().replace(/[^0-9K]/g, ''); return clean.length >= 2 ? `${clean.slice(0, -1)}-${clean.slice(-1)}` : ''; };
 const rutKey = (rut) => normalizeRut(rut).replace('-', '');
 const send = (res, status, payload, headers = {}) => { const body = typeof payload === 'string' ? payload : JSON.stringify(payload); res.writeHead(status, { 'Content-Type':'application/json; charset=utf-8', ...headers }); res.end(body); };
-
-const readJson = (req) => new Promise((resolve, reject) => {
-  let raw = '';
-  req.on('data', (chunk) => { raw += chunk; if (Buffer.byteLength(raw) > MAX_BODY) { reject(new Error('PAYLOAD_TOO_LARGE')); req.destroy(); } });
-  req.on('end', () => { try { resolve(JSON.parse(raw || '{}')); } catch { reject(new Error('INVALID_JSON')); } });
-  req.on('error', reject);
-});
-
+const readJson = (req) => new Promise((resolve, reject) => { let raw = ''; req.on('data', (chunk) => { raw += chunk; if (Buffer.byteLength(raw) > MAX_BODY) { reject(new Error('PAYLOAD_TOO_LARGE')); req.destroy(); } }); req.on('end', () => { try { resolve(JSON.parse(raw || '{}')); } catch { reject(new Error('INVALID_JSON')); } }); req.on('error', reject); });
 const parseCookies = (header = '') => Object.fromEntries(header.split(';').map((part) => part.trim().split('=').map(decodeURIComponent)).filter(([key]) => key));
-const isAdmin = (req) => {
-  const token = parseCookies(req.headers.cookie || '').admin_session;
-  const expiry = token ? adminSessions.get(token) : 0;
-  if (!expiry || expiry <= Date.now()) { if (token) adminSessions.delete(token); return false; }
-  return true;
-};
-
-const sanitizeRecord = (record = {}) => {
-  const fields = ['fullName','birthDate','age','document','gender','phone','address','emergencyName','emergencyRelation','emergencyPhone','insurance','bloodType','weight','height','bmi','allergies','medicalHistory','medications','date','professional','reason','symptoms','diagnosis','treatment','notes'];
-  return fields.reduce((out, key) => { const value = record[key]; out[key] = typeof value === 'string' ? value.trim().slice(0, 5000) : String(value ?? '').slice(0, 200); return out; }, {});
-};
+const isAdmin = (req) => { const token = parseCookies(req.headers.cookie || '').admin_session; const expiry = token ? adminSessions.get(token) : 0; if (!expiry || expiry <= Date.now()) { if (token) adminSessions.delete(token); return false; } return true; };
+const sanitizeRecord = (record = {}) => { const fields = ['fullName','birthDate','age','document','gender','phone','address','emergencyName','emergencyRelation','emergencyPhone','insurance','bloodType','weight','height','bmi','allergies','medicalHistory','medications','date','professional','reason','symptoms','diagnosis','treatment','notes']; return fields.reduce((out, key) => { const value = record[key]; out[key] = typeof value === 'string' ? value.trim().slice(0, 5000) : String(value ?? '').slice(0, 200); return out; }, {}); };
 const validAttachment = (attachment) => { if (!attachment) return true; const allowed = new Set(['application/pdf','image/jpeg','image/png','image/webp']); return allowed.has(attachment.type) && Number(attachment.size) <= 5 * 1024 * 1024 && typeof attachment.data === 'string'; };
+const historyCopy = (record, savedAt) => ({ id:crypto.randomUUID(), savedAt, record:{ ...record } });
+
+const makeDemoRecord = ({ name, birthDate, age, rut, gender, date, reason, symptoms, diagnosis, treatment, weight, height }) => ({ fullName:name,birthDate,age:String(age),document:rut,gender,phone:'',address:'REGISTRO DEMO · DATOS FICTICIOS',emergencyName:'Contacto DEMO',emergencyRelation:'Prueba',emergencyPhone:'',insurance:'Fonasa',bloodType:'O+',weight:String(weight),height:String(height),bmi:(Number(weight) / Math.pow(Number(height) / 100, 2)).toFixed(1),allergies:'Ninguna',medicalHistory:'Datos completamente ficticios para demostración.',medications:'',date,professional:'Equipo DEMO',reason,symptoms,diagnosis,treatment,notes:'Paciente de demostración. No corresponde a una persona real.' });
+const seedDemoPatients = () => {
+  const db = readDb(); let changed = false;
+  const demos = {
+    '123456785': { record:makeDemoRecord({name:'Valentina Demo',birthDate:'2009-04-18',age:17,rut:'12.345.678-5',gender:'Femenino',date:'2026-09-04',reason:'Control preventivo escolar',symptoms:'Sin síntomas relevantes.',diagnosis:'Control preventivo normal.',treatment:'Mantener controles periódicos.',weight:58,height:162}), history:[makeDemoRecord({name:'Valentina Demo',birthDate:'2009-04-18',age:17,rut:'12.345.678-5',gender:'Femenino',date:'2026-05-12',reason:'Control general',symptoms:'Sin síntomas relevantes.',diagnosis:'Sin hallazgos relevantes.',treatment:'Observación y control.',weight:57,height:161}), makeDemoRecord({name:'Valentina Demo',birthDate:'2009-04-18',age:17,rut:'12.345.678-5',gender:'Femenino',date:'2026-07-16',reason:'Revisión preventiva',symptoms:'Molestias respiratorias leves.',diagnosis:'Cuadro respiratorio leve de resolución espontánea.',treatment:'Hidratación y control si persiste.',weight:57.5,height:162})] },
+    '987654325': { record:makeDemoRecord({name:'Tomás Prueba',birthDate:'2009-02-03',age:17,rut:'98.765.432-5',gender:'Masculino',date:'2026-09-03',reason:'Control deportivo',symptoms:'Sin síntomas actuales.',diagnosis:'Apto para actividad habitual según registro DEMO.',treatment:'Mantener hidratación y pausas.',weight:70,height:174}), history:[makeDemoRecord({name:'Tomás Prueba',birthDate:'2009-02-03',age:17,rut:'98.765.432-5',gender:'Masculino',date:'2026-04-28',reason:'Consulta preventiva',symptoms:'Sin síntomas.',diagnosis:'Sin hallazgos relevantes.',treatment:'Seguimiento habitual.',weight:68,height:173}), makeDemoRecord({name:'Tomás Prueba',birthDate:'2009-02-03',age:17,rut:'98.765.432-5',gender:'Masculino',date:'2026-08-05',reason:'Control post actividad física',symptoms:'Molestia muscular leve.',diagnosis:'Sobrecarga muscular leve en registro DEMO.',treatment:'Reposo relativo y observación.',weight:69,height:174})] },
+    '765432103': { record:makeDemoRecord({name:'Matías Test',birthDate:'2010-11-22',age:15,rut:'76.543.210-3',gender:'Prefiere no indicar',date:'2026-09-02',reason:'Revisión de antecedentes',symptoms:'Sin síntomas actuales.',diagnosis:'Control de antecedentes ficticios.',treatment:'Continuar seguimiento institucional.',weight:62,height:168}), history:[makeDemoRecord({name:'Matías Test',birthDate:'2010-11-22',age:15,rut:'76.543.210-3',gender:'Prefiere no indicar',date:'2026-05-21',reason:'Control general',symptoms:'Sin síntomas.',diagnosis:'Sin hallazgos relevantes.',treatment:'Control preventivo.',weight:60,height:167}), makeDemoRecord({name:'Matías Test',birthDate:'2010-11-22',age:15,rut:'76.543.210-3',gender:'Prefiere no indicar',date:'2026-07-30',reason:'Consulta de seguimiento',symptoms:'Molestia ocasional.',diagnosis:'Seguimiento ficticio.',treatment:'Observación y control.',weight:61,height:168})] }
+  };
+  for (const [key, demo] of Object.entries(demos)) { if (!db[key]) { const savedAt = new Date().toISOString(); db[key] = { record:demo.record, history:demo.history.map((record) => historyCopy(record, savedAt)), attachment:null, updatedAt:savedAt, isDemo:true }; changed = true; } }
+  if (changed) writeDb(db);
+};
+seedDemoPatients();
 
 const server = http.createServer(async (req, res) => {
   const url = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
   if (url.pathname === '/health') return send(res, 200, { status:'ok', service:'FichaSalabrio' });
-
-  if (url.pathname === '/api/admin/login' && req.method === 'POST') {
-    try {
-      const payload = await readJson(req); const supplied = String(payload.password || '');
-      const a = Buffer.from(supplied); const b = Buffer.from(ADMIN_PASSWORD);
-      const valid = a.length === b.length && crypto.timingSafeEqual(a, b);
-      if (!valid) return send(res, 401, { error:'Contraseña incorrecta.' });
-      const token = crypto.randomBytes(32).toString('hex');
-      adminSessions.set(token, Date.now() + 8 * 60 * 60 * 1000);
-      return send(res, 200, { ok:true }, { 'Set-Cookie':`admin_session=${token}; HttpOnly; Secure; SameSite=Strict; Path=/; Max-Age=28800` });
-    } catch { return send(res, 400, { error:'Solicitud inválida.' }); }
-  }
-
-  if (url.pathname === '/api/admin/logout' && req.method === 'POST') {
-    const token = parseCookies(req.headers.cookie || '').admin_session; if (token) adminSessions.delete(token);
-    return send(res, 200, { ok:true }, { 'Set-Cookie':'admin_session=; HttpOnly; Secure; SameSite=Strict; Path=/; Max-Age=0' });
-  }
-
-  if (url.pathname === '/api/admin/patients' && req.method === 'GET') {
-    if (!isAdmin(req)) return send(res, 401, { error:'Acceso de administrador requerido.' });
-    const records = Object.values(readDb()).map((item) => ({ rut:item.record?.document || '', name:item.record?.fullName || '', date:item.record?.date || '', updatedAt:item.updatedAt || '' })).sort((a,b) => String(b.updatedAt).localeCompare(String(a.updatedAt)));
-    return send(res, 200, { records });
-  }
-
-  if (url.pathname.startsWith('/api/admin/patients/') && (req.method === 'GET' || req.method === 'DELETE')) {
-    if (!isAdmin(req)) return send(res, 401, { error:'Acceso de administrador requerido.' });
-    const rut = normalizeRut(decodeURIComponent(url.pathname.slice('/api/admin/patients/'.length))); const key = rutKey(rut);
-    if (!key || key.length < 8) return send(res, 400, { error:'RUT inválido.' });
-    const db = readDb();
-    if (!db[key]) return send(res, 404, { error:'Ficha no encontrada.' });
-    if (req.method === 'DELETE') {
-      delete db[key];
-      writeDb(db);
-      return send(res, 200, { ok:true, message:'Ficha eliminada correctamente.' });
-    }
-    const item = db[key];
-    return send(res, 200, { record:item.record, attachment:item.attachment ? { name:item.attachment.name, type:item.attachment.type, size:item.attachment.size } : null });
-  }
-
-  if (url.pathname.startsWith('/api/patients/')) {
-    const rut = normalizeRut(decodeURIComponent(url.pathname.slice('/api/patients/'.length))); const key = rutKey(rut);
-    if (!key || key.length < 8) return send(res, 400, { error:'RUT inválido.' });
-    const db = readDb();
-    if (req.method === 'GET') {
-      if (!db[key]) return send(res, 404, { error:'Ficha no encontrada.' });
-      const { record, attachment } = db[key];
-      return send(res, 200, { record, attachment:attachment ? { name:attachment.name, type:attachment.type, size:attachment.size } : null });
-    }
-    if (req.method === 'PUT') {
-      try {
-        const payload = await readJson(req);
-        if (!payload.record || typeof payload.record !== 'object') return send(res, 400, { error:'Datos de ficha incompletos.' });
-        if (payload.attachment && !validAttachment(payload.attachment)) return send(res, 400, { error:'Documento inválido o supera 5 MB.' });
-        const record = sanitizeRecord(payload.record); record.document = rut;
-        const weight = Number.parseFloat(record.weight); const heightCm = Number.parseFloat(record.height);
-        record.bmi = Number.isFinite(weight) && Number.isFinite(heightCm) && weight > 0 && heightCm > 0 ? (weight / Math.pow(heightCm / 100, 2)).toFixed(1) : '';
-        db[key] = { record, attachment:payload.attachment ? { name:String(payload.attachment.name || 'documento').slice(0,180), type:payload.attachment.type, size:Number(payload.attachment.size), data:payload.attachment.data } : db[key]?.attachment || null, updatedAt:new Date().toISOString() };
-        writeDb(db); return send(res, 200, { ok:true, message:'Ficha guardada.' });
-      } catch (error) { return send(res, 400, { error:error.message === 'PAYLOAD_TOO_LARGE' ? 'La solicitud es demasiado grande.' : 'No se pudo guardar la ficha.' }); }
-    }
-    return send(res, 405, { error:'Método no permitido.' }, { Allow:'GET, PUT' });
-  }
-
-  const requestedPath = url.pathname === '/' ? '/index.html' : url.pathname;
-  const filePath = path.resolve(ROOT, `.${requestedPath}`); const relativePath = path.relative(ROOT, filePath);
-  if (relativePath.startsWith('..') || path.isAbsolute(relativePath)) return send(res, 403, { error:'Forbidden' });
-  fs.readFile(filePath, (error, data) => {
-    if (error) { res.writeHead(error.code === 'ENOENT' ? 404 : 500, { 'Content-Type':'text/plain; charset=utf-8' }); return res.end(error.code === 'ENOENT' ? 'Not found' : 'Server error'); }
-    const ext = path.extname(filePath).toLowerCase();
-    res.writeHead(200, { 'Content-Type':MIME[ext] || 'application/octet-stream', 'Cache-Control':ext === '.html' ? 'no-cache' : 'public, max-age=3600' });
-    res.end(data);
-  });
+  if (url.pathname === '/api/admin/login' && req.method === 'POST') { try { const payload = await readJson(req); const supplied = String(payload.password || ''); const a = Buffer.from(supplied); const b = Buffer.from(ADMIN_PASSWORD); const valid = a.length === b.length && crypto.timingSafeEqual(a,b); if (!valid) return send(res,401,{error:'Contraseña incorrecta.'}); const token=crypto.randomBytes(32).toString('hex'); adminSessions.set(token,Date.now()+8*60*60*1000); return send(res,200,{ok:true},{'Set-Cookie':`admin_session=${token}; HttpOnly; Secure; SameSite=Strict; Path=/; Max-Age=28800`}); } catch { return send(res,400,{error:'Solicitud inválida.'}); } }
+  if (url.pathname === '/api/admin/logout' && req.method === 'POST') { const token=parseCookies(req.headers.cookie||'').admin_session; if(token) adminSessions.delete(token); return send(res,200,{ok:true},{'Set-Cookie':'admin_session=; HttpOnly; Secure; SameSite=Strict; Path=/; Max-Age=0'}); }
+  if (url.pathname === '/api/admin/patients' && req.method === 'GET') { if(!isAdmin(req)) return send(res,401,{error:'Acceso de administrador requerido.'}); const records=Object.values(readDb()).map((item)=>({rut:item.record?.document||'',name:item.record?.fullName||'',date:item.record?.date||'',updatedAt:item.updatedAt||'',consultationCount:1+(Array.isArray(item.history)?item.history.length:0),isDemo:Boolean(item.isDemo)})).sort((a,b)=>String(b.updatedAt).localeCompare(String(a.updatedAt))); return send(res,200,{records}); }
+  if (url.pathname.startsWith('/api/admin/patients/') && (req.method==='GET'||req.method==='DELETE')) { if(!isAdmin(req)) return send(res,401,{error:'Acceso de administrador requerido.'}); const rut=normalizeRut(decodeURIComponent(url.pathname.slice('/api/admin/patients/'.length))); const key=rutKey(rut); if(!key||key.length<8) return send(res,400,{error:'RUT inválido.'}); const db=readDb(); if(!db[key]) return send(res,404,{error:'Ficha no encontrada.'}); if(req.method==='DELETE'){delete db[key];writeDb(db);return send(res,200,{ok:true,message:'Ficha eliminada correctamente.'});} const item=db[key]; return send(res,200,{record:item.record,history:Array.isArray(item.history)?item.history:[],attachment:item.attachment?{name:item.attachment.name,type:item.attachment.type,size:item.attachment.size}:null,isDemo:Boolean(item.isDemo)}); }
+  if (url.pathname.startsWith('/api/patients/')) { const rut=normalizeRut(decodeURIComponent(url.pathname.slice('/api/patients/'.length))); const key=rutKey(rut); if(!key||key.length<8) return send(res,400,{error:'RUT inválido.'}); const db=readDb(); if(req.method==='GET'){ if(!db[key]) return send(res,404,{error:'Ficha no encontrada.'}); const item=db[key]; return send(res,200,{record:item.record,history:Array.isArray(item.history)?item.history:[],attachment:item.attachment?{name:item.attachment.name,type:item.attachment.type,size:item.attachment.size}:null,isDemo:Boolean(item.isDemo)}); } if(req.method==='PUT'){ try { const payload=await readJson(req); if(!payload.record||typeof payload.record!=='object') return send(res,400,{error:'Datos de ficha incompletos.'}); if(payload.attachment&&!validAttachment(payload.attachment)) return send(res,400,{error:'Documento inválido o supera 5 MB.'}); const record=sanitizeRecord(payload.record); record.document=rut; const weight=Number.parseFloat(record.weight); const heightCm=Number.parseFloat(record.height); record.bmi=Number.isFinite(weight)&&Number.isFinite(heightCm)&&weight>0&&heightCm>0?(weight/Math.pow(heightCm/100,2)).toFixed(1):''; const existing=db[key]; const history=Array.isArray(existing?.history)?existing.history:[]; if(existing?.record) history.push(historyCopy(existing.record,existing.updatedAt||new Date().toISOString())); const nextHistory=history.slice(-50); const now=new Date().toISOString(); db[key]={record,history:nextHistory,attachment:payload.attachment?{name:String(payload.attachment.name||'documento').slice(0,180),type:payload.attachment.type,size:Number(payload.attachment.size),data:payload.attachment.data}:existing?.attachment||null,updatedAt:now,isDemo:Boolean(existing?.isDemo&&existing.isDemo)}; writeDb(db); return send(res,200,{ok:true,message:'Ficha guardada. La consulta anterior quedó en el historial.',history:nextHistory}); } catch(error){ return send(res,400,{error:error.message==='PAYLOAD_TOO_LARGE'?'La solicitud es demasiado grande.':'No se pudo guardar la ficha.'}); } } return send(res,405,{error:'Método no permitido.'},{Allow:'GET, PUT'}); }
+  const requestedPath=url.pathname==='/'?'/index.html':url.pathname; const filePath=path.resolve(ROOT,`.${requestedPath}`); const relativePath=path.relative(ROOT,filePath); if(relativePath.startsWith('..')||path.isAbsolute(relativePath)) return send(res,403,{error:'Forbidden'}); fs.readFile(filePath,(error,data)=>{ if(error){res.writeHead(error.code==='ENOENT'?404:500,{'Content-Type':'text/plain; charset=utf-8'});return res.end(error.code==='ENOENT'?'Not found':'Server error');} const ext=path.extname(filePath).toLowerCase(); res.writeHead(200,{'Content-Type':MIME[ext]||'application/octet-stream','Cache-Control':ext==='.html'?'no-cache':'public, max-age=3600'}); res.end(data); });
 });
-
-server.listen(PORT, '0.0.0.0', () => console.log(`FichaSalabrio listening on port ${PORT}`));
+server.listen(PORT,'0.0.0.0',()=>console.log(`FichaSalabrio listening on port ${PORT}`));
