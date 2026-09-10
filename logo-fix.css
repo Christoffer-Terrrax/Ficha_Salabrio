@@ -1,10 +1,10 @@
-/* Stable institutional logo rendering: preserve the original logo aspect ratio and never crop it. */
+/* Preserve the original Montemaría logo photo without cropping, distortion, or replacement. */
 .institution-logo{
   display:block!important;
   width:auto!important;
   height:auto!important;
   max-width:100%!important;
-  max-height:100%!important;
+  max-height:none!important;
   aspect-ratio:auto!important;
   background:none!important;
   object-fit:contain!important;
@@ -19,7 +19,7 @@
 .login-logo{
   width:auto!important;
   height:auto!important;
-  max-width:260px!important;
+  max-width:270px!important;
   max-height:125px!important;
   margin:4px auto 14px!important;
 }
