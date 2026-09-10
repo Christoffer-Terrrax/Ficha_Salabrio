@@ -8,15 +8,16 @@
     <title>FichaSalibrio | Liceo Tecnológico Montemaría</title>
     <link rel="stylesheet" href="styles.css" />
     <link rel="stylesheet" href="polish.css" />
+    <link rel="stylesheet" href="final-ui.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" defer></script>
     <script src="theme.js" defer></script>
   </head>
   <body>
     <div id="loginView" class="login-view">
       <main class="login-card" aria-labelledby="loginTitle">
-        <div class="login-top-actions"><button id="themeToggleLogin" class="theme-toggle" type="button" aria-label="Cambiar tema">☾ Oscuro</button></div>
+        <div class="login-top-actions"><button id="themeToggleLogin" class="theme-toggle" type="button" aria-label="Cambiar tema">☾ Modo oscuro</button></div>
         <div class="login-brand-bar"><span class="login-brand-mark">FS</span><span>FICHASALIBRIO</span></div>
-        <img class="institution-logo login-logo" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT8ZK77KEeKlj0afnVRG8F0sCdrjZdEuGagxWJoePjmHpnOEZZZmHRzBNPP&s=10" alt="Liceo Tecnológico Montemaría" referrerpolicy="no-referrer" />
+        <img class="institution-logo login-logo" src="logo-montemaria.png" alt="Liceo Tecnológico Montemaría" />
         <span class="product-chip">PLATAFORMA MÉDICA DIGITAL</span>
         <h1 id="loginTitle">Tu ficha. En un solo lugar.</h1>
         <p class="login-description">Accede con tu RUT para consultar y completar tu información médica institucional.</p>
@@ -50,10 +51,10 @@
         <div class="main-content">
           <header class="topbar no-print">
             <div class="brand-lockup"><p class="eyebrow">PLATAFORMA INSTITUCIONAL / PERFIL ACTIVO</p><h1>Centro de salud digital</h1><p class="session-label">Paciente identificado con RUN <strong id="sessionRut"></strong></p></div>
-            <div class="topbar-actions"><button id="themeToggleApp" class="theme-toggle" type="button" aria-label="Cambiar tema">☾ Oscuro</button><span class="online-badge"><i></i> CONECTADO</span><button class="top-logout" type="button" onclick="document.getElementById('logoutButton').click()">Salir</button></div>
+            <div class="topbar-actions"><button id="themeToggleApp" class="theme-toggle" type="button" aria-label="Cambiar tema">☾ Modo oscuro</button><span class="online-badge"><i></i> CONECTADO</span><button class="top-logout" type="button" onclick="document.getElementById('logoutButton').click()">Salir</button></div>
           </header>
 
-          <section class="welcome-panel no-print"><div><p class="welcome-kicker">FICHASALIBRIO · MEDICAL PROFILE</p><h2>Tu información médica,<br /><span>organizada y disponible.</span></h2><p>Completa tus antecedentes para mantener tu ficha institucional actualizada.</p></div><div class="welcome-art" aria-hidden="true"><span class="art-ring ring-one"></span><span class="art-ring ring-two"></span><span class="art-core">FS</span></div></section>
+          <section class="welcome-panel no-print"><div><p class="welcome-kicker">FICHASALIBRIO · PERFIL MÉDICO</p><h2>Tu información médica,<br /><span>organizada y disponible.</span></h2><p>Completa tus antecedentes para mantener tu ficha institucional actualizada.</p></div><div class="welcome-art" aria-hidden="true"><span class="art-ring ring-one"></span><span class="art-ring ring-two"></span><span class="art-core">FS</span></div></section>
           <section class="quick-stats no-print" aria-label="Resumen de la ficha">
             <a class="quick-card" href="#identificacion"><span class="quick-icon">ID</span><span><small>PERFIL</small><strong>Identificación</strong></span><b>›</b></a>
             <a class="quick-card" href="#informacion-medica"><span class="quick-icon">+</span><span><small>SALUD</small><strong>Antecedentes</strong></span><b>›</b></a>
@@ -62,7 +63,7 @@
           </section>
 
           <main id="printableFicha" class="medical-document">
-            <header class="document-header"><img class="institution-logo document-logo" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT8ZK77KEeKlj0afnVRG8F0sCdrjZdEuGagxWJoePjmHpnOEZZZmHRzBNPP&s=10" alt="Liceo Tecnológico Montemaría" referrerpolicy="no-referrer" /><div class="document-title"><p class="document-kicker">DESAFÍO TP · TELECOMUNICACIONES</p><h1>FichaSalibrio</h1><p>Ficha Médica Digital</p></div><div class="document-meta"><span>RUN</span><strong id="documentRut"></strong></div></header>
+            <header class="document-header"><img class="institution-logo document-logo" src="logo-montemaria.png" alt="Liceo Tecnológico Montemaría" /><div class="document-title"><p class="document-kicker">DESAFÍO TP · TELECOMUNICACIONES</p><h1>FichaSalibrio</h1><p>Ficha Médica Digital</p></div><div class="document-meta"><span>RUN</span><strong id="documentRut"></strong></div></header>
             <div class="document-body">
               <section id="identificacion" class="document-section"><div class="section-title"><span>01</span><div><p>Identificación</p><h2>Datos demográficos del paciente</h2></div></div><div class="grid three-columns">
                 <label><span>Nombre completo</span><input type="text" id="fullName" name="fullName" placeholder="Nombre y apellidos" autocomplete="name" required /></label>
