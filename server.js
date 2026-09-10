@@ -8,12 +8,10 @@ const ROOT = __dirname;
 const DATA_DIR = process.env.DATA_DIR || path.join(ROOT, 'data');
 const DB_FILE = path.join(DATA_DIR, 'patients.json');
 const MAX_BODY = 8 * 1024 * 1024;
-// Demo fallback so the admin panel works immediately after deployment.
-// For a real deployment, set ADMIN_PASSWORD in Railway and replace the demo value.
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'admin1234';
 const adminSessions = new Map();
 
-const MIME = { '.html':'text/html; charset=utf-8', '.css':'text/css; charset=utf-8', '.js':'application/javascript; charset=utf-8', '.svg':'image/svg+xml', '.png':'image/png', '.json':'application/json; charset=utf-8', '.ico':'image/x-icon' };
+const MIME = { '.html':'text/html; charset=utf-8', '.css':'text/css; charset=utf-8', '.js':'application/javascript; charset=utf-8', '.svg':'image/svg+xml', '.json':'application/json; charset=utf-8', '.png':'image/png', '.jpg':'image/jpeg', '.jpeg':'image/jpeg', '.webp':'image/webp', '.ico':'image/x-icon' };
 
 fs.mkdirSync(DATA_DIR, { recursive: true });
 if (!fs.existsSync(DB_FILE)) fs.writeFileSync(DB_FILE, '{}', 'utf8');
@@ -78,7 +76,11 @@ const server = http.createServer(async (req, res) => {
     if (!key || key.length < 8) return send(res, 400, { error:'RUT inválido.' });
     const db = readDb();
     if (!db[key]) return send(res, 404, { error:'Ficha no encontrada.' });
-    if (req.method === 'DELETE') { delete db[key]; writeDb(db); return send(res, 200, { ok:true, message:'Ficha eliminada correctamente.' }); }
+    if (req.method === 'DELETE') {
+      delete db[key];
+      writeDb(db);
+      return send(res, 200, { ok:true, message:'Ficha eliminada correctamente.' });
+    }
     const item = db[key];
     return send(res, 200, { record:item.record, attachment:item.attachment ? { name:item.attachment.name, type:item.attachment.type, size:item.attachment.size } : null });
   }
@@ -89,7 +91,8 @@ const server = http.createServer(async (req, res) => {
     const db = readDb();
     if (req.method === 'GET') {
       if (!db[key]) return send(res, 404, { error:'Ficha no encontrada.' });
-      const { record, attachment } = db[key]; return send(res, 200, { record, attachment:attachment ? { name:attachment.name, type:attachment.type, size:attachment.size } : null });
+      const { record, attachment } = db[key];
+      return send(res, 200, { record, attachment:attachment ? { name:attachment.name, type:attachment.type, size:attachment.size } : null });
     }
     if (req.method === 'PUT') {
       try {
@@ -111,9 +114,9 @@ const server = http.createServer(async (req, res) => {
   if (relativePath.startsWith('..') || path.isAbsolute(relativePath)) return send(res, 403, { error:'Forbidden' });
   fs.readFile(filePath, (error, data) => {
     if (error) { res.writeHead(error.code === 'ENOENT' ? 404 : 500, { 'Content-Type':'text/plain; charset=utf-8' }); return res.end(error.code === 'ENOENT' ? 'Not found' : 'Server error'); }
-    let output = data;
-    if (requestedPath === '/index.html') output = Buffer.from(data.toString('utf8').replace('</form>', '</form><a class="admin-access" href="/admin.html">Acceso de administrador</a>'), 'utf8');
-    const ext = path.extname(filePath).toLowerCase(); res.writeHead(200, { 'Content-Type':MIME[ext] || 'application/octet-stream', 'Cache-Control':ext === '.html' ? 'no-cache' : 'public, max-age=3600' }); res.end(output);
+    const ext = path.extname(filePath).toLowerCase();
+    res.writeHead(200, { 'Content-Type':MIME[ext] || 'application/octet-stream', 'Cache-Control':ext === '.html' ? 'no-cache' : 'public, max-age=3600' });
+    res.end(data);
   });
 });
 
