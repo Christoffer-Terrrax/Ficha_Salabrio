@@ -1,7 +1,12 @@
-/* FIX DEFINITIVO DEL LOGO: reemplaza el PNG que está fallando por el SVG estable. */
+/* Logo oficial proporcionado para FichaSalibrio. Se usa el mismo recurso en pantalla e impresión/PDF. */
+:root {
+  --montemaria-logo: url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT8ZK77KEeKlj0afnVRG8F0sCdrjZdEuGagxWJoePjmHpnOEZZZmHRzBNPP&s=10");
+}
+
 img.institution-logo,
-img[src*="logo-montemaria.png"] {
-  content: url("logo-montemaria-fixed.svg?v=5");
+img[src*="logo-montemaria.png"],
+img[src*="logo-montemaria-fixed.svg"] {
+  content: var(--montemaria-logo);
   display: block;
   object-fit: contain;
   object-position: center;
@@ -24,16 +29,15 @@ img[src*="logo-montemaria.png"] {
   max-height: 88px;
 }
 
-/* Evita que el navegador muestre el icono de imagen rota o el PNG corrupto. */
-img[src*="logo-montemaria.png"] {
+img[src*="logo-montemaria.png"],
+img[src*="logo-montemaria-fixed.svg"] {
   font-size: 0;
   color: transparent;
 }
 
-/* El logo del PDF debe usar el mismo recurso estable. */
 @media print {
   .document-logo {
-    content: url("logo-montemaria-fixed.svg?v=5");
+    content: var(--montemaria-logo);
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
   }
